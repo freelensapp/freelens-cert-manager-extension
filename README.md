@@ -24,6 +24,8 @@ read the issued certificate from its Secret and link the objects of an issuance
 to each other, and the menus ask for a new issuance, approve or deny a request,
 delete what is stuck, and edit an object as YAML.
 
+[Video Demo](https://github.com/user-attachments/assets/84c3de7e-81ca-43e1-8ed2-bd6dde19596d)
+
 ![The Certificates of a cluster, with their health and the time they have left, dark theme](assets/screenshots/certificates.png)
 
 ![The details of a Certificate, with the X.509 data read from its Secret, dark theme](assets/screenshots/certificate-details.png)
