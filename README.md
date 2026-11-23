@@ -24,6 +24,14 @@ read the issued certificate from its Secret and link the objects of an issuance
 to each other, and the menus ask for a new issuance, approve or deny a request,
 delete what is stuck, and edit an object as YAML.
 
+![The Certificates of a cluster, with their health and the time they have left, dark theme](assets/screenshots/certificates.png)
+
+![The details of a Certificate, with the X.509 data read from its Secret, dark theme](assets/screenshots/certificate-details.png)
+
+![The menu of a Certificate, with Force Renew and Delete (cascade) next to the items of Freelens, dark theme](assets/screenshots/certificate-menu.png)
+
+![A stuck ACME Challenge, with the reason reported by cert-manager and its events, dark theme](assets/screenshots/challenge-details.png)
+
 ## Authors
 
 - [Maifee Ul Asad](https://github.com/maifeeulasad) created this extension and
