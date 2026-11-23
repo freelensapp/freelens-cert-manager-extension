@@ -314,7 +314,7 @@ gone from the Custom Resources tree.
 - **Links** between objects are `ResourceLink` buttons, which open the details of
   a self link with `Renderer.Navigation.showDetails`. The lists of owned objects
   read the store of the other kind and show what it has loaded.
-- **The height of a page**: the main area of the host has `overflow: hidden` and
+- **The height of a page**: the main area of the host has `overflow-y: hidden` and
   the list takes its whole height, so anything above the list pushes its bottom
   and its add button out of reach. The Certificates page lays out its summary and
   list in a flex column, where the list takes what the summary leaves.

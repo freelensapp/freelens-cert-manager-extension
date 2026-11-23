@@ -196,6 +196,13 @@ describe.skipIf(!(await appReady({ cluster: true })))(
 
       expect(await nested.count()).toBe(0);
       expect(await detailsItemValue(frame, "Subject").textContent()).toBe("CN=test.example.com");
+      expect(await detailsItemValue(frame, "SANs").textContent()).toBe("DNS:test.example.com");
+
+      // The fingerprint may wrap only between two bytes.
+      const fingerprint = detailsItemValue(frame, "SHA-256 Fingerprint");
+
+      expect(await fingerprint.textContent()).toMatch(/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/);
+      expect(await fingerprint.locator("wbr").count()).toBe(31);
     });
 
     it("keeps the list and its add button in view under the summary of the Certificates page", async () => {

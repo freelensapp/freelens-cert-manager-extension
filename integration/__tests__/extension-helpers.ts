@@ -1002,13 +1002,21 @@ export async function clickMenuItem(frame: Frame, menu: Locator, title: string) 
  * title and shows its icon alone.
  */
 export async function expectToolbarIconOnly(frame: Frame, title: string) {
-  const label = menuItem(detailsDrawer(frame).locator(".MenuActions.toolbar"), title);
+  const toolbar = detailsDrawer(frame).locator(".MenuActions.toolbar");
+  const label = menuItem(toolbar, title);
 
   await label.first().waitFor({ state: "attached", ...viewTimeout });
 
   if (await label.first().isVisible()) {
     throw new Error(`The toolbar of the details drawer shows the label of ${title}`);
   }
+
+  await toolbar
+    .locator(".MenuItem")
+    .filter({ has: frame.locator(".title").getByText(title, { exact: true }) })
+    .locator(".Icon")
+    .first()
+    .waitFor({ state: "visible", ...viewTimeout });
 }
 
 /**
