@@ -11,17 +11,15 @@
  * Ref: https://cert-manager.io/docs/usage/certificate/#cleaning-up-after-a-deleted-certificate
  */
 
-import { Renderer } from "@freelensapp/extensions";
+import { type Common, Renderer } from "@freelensapp/extensions";
 import { Certificate } from "../../common/api";
 import { getCertSpec } from "../../common/api/accessors";
 
 import type { CertificateStore } from "../../common/api";
 
-interface Props {
-  object: Certificate;
-}
+type Props = Common.Types.KubeObjectMenuItemProps<Certificate>;
 
-export function CertificateDeleteCascadeMenuItem({ object: cert }: Props) {
+export function CertificateDeleteCascadeMenuItem({ object: cert, toolbar }: Props) {
   function handleDeleteCascade() {
     const ns = cert.getNs();
     const name = cert.getName();
@@ -54,8 +52,9 @@ export function CertificateDeleteCascadeMenuItem({ object: cert }: Props) {
   }
 
   return (
-    <Renderer.Component.MenuItem icon="delete_sweep" onClick={handleDeleteCascade}>
-      Delete (cascade)
+    <Renderer.Component.MenuItem onClick={handleDeleteCascade}>
+      <Renderer.Component.Icon material="delete_sweep" interactive={toolbar} title="Delete (cascade)" />
+      <span className="title">Delete (cascade)</span>
     </Renderer.Component.MenuItem>
   );
 }

@@ -10,16 +10,14 @@
  * Ref: cert-manager API — CertificateRequest approval via status subresource
  */
 
-import { Renderer } from "@freelensapp/extensions";
+import { type Common, Renderer } from "@freelensapp/extensions";
 import { isCertReqApproved, isCertReqDenied } from "../../common/api/accessors";
 
 import type { CertificateRequest } from "../../common/api";
 
-interface Props {
-  object: CertificateRequest;
-}
+type Props = Common.Types.KubeObjectMenuItemProps<CertificateRequest>;
 
-export function CertificateRequestApproveMenuItem({ object: cr }: Props) {
+export function CertificateRequestApproveMenuItem({ object: cr, toolbar }: Props) {
   const alreadyDecided = isCertReqApproved(cr) || isCertReqDenied(cr);
 
   if (alreadyDecided) return null;
@@ -73,8 +71,9 @@ export function CertificateRequestApproveMenuItem({ object: cr }: Props) {
   }
 
   return (
-    <Renderer.Component.MenuItem icon="check_circle" onClick={handleApprove}>
-      Approve
+    <Renderer.Component.MenuItem onClick={handleApprove}>
+      <Renderer.Component.Icon material="check_circle" interactive={toolbar} title="Approve" />
+      <span className="title">Approve</span>
     </Renderer.Component.MenuItem>
   );
 }

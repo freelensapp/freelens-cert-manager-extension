@@ -6,13 +6,11 @@
 import { Issuer, type IssuerStore } from "../../common/api";
 import { ResourceEditYamlMenuItem } from "./resource-edit-yaml-menu-item";
 
-import type { Renderer } from "@freelensapp/extensions";
+import type { Common, Renderer } from "@freelensapp/extensions";
 
-interface Props {
-  object: Issuer;
-}
+type Props = Common.Types.KubeObjectMenuItemProps<Issuer>;
 
-export function IssuerEditMenuItem({ object }: Props) {
+export function IssuerEditMenuItem({ object, toolbar }: Props) {
   const api = (Issuer.getStore() as IssuerStore).api as unknown as Renderer.K8sApi.KubeApi<Renderer.K8sApi.KubeObject>;
-  return <ResourceEditYamlMenuItem object={object} api={api} />;
+  return <ResourceEditYamlMenuItem object={object} api={api} toolbar={toolbar} />;
 }

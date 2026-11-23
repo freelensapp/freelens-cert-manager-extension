@@ -3,12 +3,11 @@
  * Co-Author: Claude Sonnet 4.6 <noreply@anthropic.com>
  */
 
-import { Renderer } from "@freelensapp/extensions";
+import { type Common, Renderer } from "@freelensapp/extensions";
 import { dump, load } from "js-yaml";
 import { yamlEditorStore } from "../stores/yaml-editor-store";
 
-interface Props {
-  object: Renderer.K8sApi.KubeObject;
+interface Props extends Common.Types.KubeObjectMenuItemProps<Renderer.K8sApi.KubeObject> {
   api: Renderer.K8sApi.KubeApi<Renderer.K8sApi.KubeObject>;
 }
 
@@ -27,7 +26,7 @@ function toEditYaml(obj: Renderer.K8sApi.KubeObject): string {
   );
 }
 
-export function ResourceEditYamlMenuItem({ object, api }: Props) {
+export function ResourceEditYamlMenuItem({ object, api, toolbar }: Props) {
   function open() {
     yamlEditorStore.open(`Edit ${object.getName()}`, toEditYaml(object), async (yamlStr) => {
       const data = load(yamlStr) as Record<string, unknown>;
@@ -39,8 +38,9 @@ export function ResourceEditYamlMenuItem({ object, api }: Props) {
   }
 
   return (
-    <Renderer.Component.MenuItem icon="edit" onClick={open}>
-      Edit YAML
+    <Renderer.Component.MenuItem onClick={open}>
+      <Renderer.Component.Icon material="edit" interactive={toolbar} title="Edit YAML" />
+      <span className="title">Edit YAML</span>
     </Renderer.Component.MenuItem>
   );
 }

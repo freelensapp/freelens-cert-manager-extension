@@ -8,17 +8,15 @@
  * the issuance from scratch.
  */
 
-import { Renderer } from "@freelensapp/extensions";
+import { type Common, Renderer } from "@freelensapp/extensions";
 import { Order } from "../../common/api";
 import { acmeStateLabel, getOrderStatus } from "../../common/api/accessors";
 
 import type { OrderStore } from "../../common/api";
 
-interface Props {
-  object: Order;
-}
+type Props = Common.Types.KubeObjectMenuItemProps<Order>;
 
-export function OrderDeleteStuckMenuItem({ object: order }: Props) {
+export function OrderDeleteStuckMenuItem({ object: order, toolbar }: Props) {
   const state = getOrderStatus(order).state;
   const isStuck = state && state !== "valid" && state !== "ready";
 
@@ -43,8 +41,9 @@ export function OrderDeleteStuckMenuItem({ object: order }: Props) {
   }
 
   return (
-    <Renderer.Component.MenuItem icon="delete_forever" onClick={handleDelete}>
-      Delete (stuck)
+    <Renderer.Component.MenuItem onClick={handleDelete}>
+      <Renderer.Component.Icon material="delete_forever" interactive={toolbar} title="Delete (stuck)" />
+      <span className="title">Delete (stuck)</span>
     </Renderer.Component.MenuItem>
   );
 }

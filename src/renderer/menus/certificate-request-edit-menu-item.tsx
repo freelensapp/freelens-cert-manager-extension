@@ -6,14 +6,12 @@
 import { CertificateRequest, type CertificateRequestStore } from "../../common/api";
 import { ResourceEditYamlMenuItem } from "./resource-edit-yaml-menu-item";
 
-import type { Renderer } from "@freelensapp/extensions";
+import type { Common, Renderer } from "@freelensapp/extensions";
 
-interface Props {
-  object: CertificateRequest;
-}
+type Props = Common.Types.KubeObjectMenuItemProps<CertificateRequest>;
 
-export function CertificateRequestEditMenuItem({ object }: Props) {
+export function CertificateRequestEditMenuItem({ object, toolbar }: Props) {
   const api = (CertificateRequest.getStore() as CertificateRequestStore)
     .api as unknown as Renderer.K8sApi.KubeApi<Renderer.K8sApi.KubeObject>;
-  return <ResourceEditYamlMenuItem object={object} api={api} />;
+  return <ResourceEditYamlMenuItem object={object} api={api} toolbar={toolbar} />;
 }
