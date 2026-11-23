@@ -62,14 +62,16 @@ function buildYaml(f: Fields): string {
 }
 
 // --- Shared input style ---
+// Text in the form takes --textColorPrimary, readable on the dialog in every theme of both supported releases:
+// --dialogTextColor is too faint on the default light theme, and the host's <label> color has an alpha in some themes.
 const inputStyle: React.CSSProperties = {
   width: "100%",
   boxSizing: "border-box",
   padding: "5px 8px",
   borderRadius: "4px",
-  border: "1px solid rgba(255,255,255,0.18)",
-  background: "rgba(255,255,255,0.06)",
-  color: "inherit",
+  border: "1px solid var(--inputControlBorder)",
+  background: "var(--inputControlBackground)",
+  color: "var(--textColorPrimary)",
   fontSize: "0.88rem",
 };
 
@@ -78,7 +80,7 @@ const labelStyle: React.CSSProperties = {
   flexDirection: "column",
   gap: "4px",
   fontSize: "0.82rem",
-  opacity: 0.85,
+  color: "var(--textColorPrimary)",
 };
 
 function Field({
@@ -98,7 +100,7 @@ function Field({
     <label style={labelStyle}>
       {label}
       <input style={inputStyle} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
-      {hint && <span style={{ fontSize: "0.75rem", opacity: 0.55 }}>{hint}</span>}
+      {hint && <span style={{ fontSize: "0.75rem" }}>{hint}</span>}
     </label>
   );
 }
@@ -186,6 +188,9 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
           gap: "14px",
           padding: "18px",
           transition: "width 0.15s",
+          background: "var(--dialogBackground)",
+          color: "var(--dialogTextColor)",
+          borderRadius: "4px",
         }}
       >
         {/* Header */}
@@ -194,7 +199,9 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
             <h2 style={{ margin: 0, fontSize: "1.05rem" }}>
               {step === 1 ? "Create Certificate — Details" : "Create Certificate — Review YAML"}
             </h2>
-            <div style={{ fontSize: "0.75rem", opacity: 0.5, marginTop: "2px" }}>Step {step} of 2</div>
+            <div style={{ fontSize: "0.75rem", color: "var(--textColorPrimary)", marginTop: "2px" }}>
+              Step {step} of 2
+            </div>
           </div>
           <button
             type="button"
@@ -204,7 +211,7 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
               border: "none",
               cursor: "pointer",
               fontSize: "1.1rem",
-              opacity: 0.6,
+              color: "var(--textColorPrimary)",
             }}
           >
             ✕
@@ -243,7 +250,7 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
                 flexDirection: "column",
                 gap: "4px",
                 fontSize: "0.82rem",
-                opacity: 0.85,
+                color: "var(--textColorPrimary)",
               }}
             >
               <span>Issuer Kind *</span>
@@ -284,7 +291,7 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
           <div
             style={{
               height: "380px",
-              border: "1px solid rgba(255,255,255,0.12)",
+              border: "1px solid var(--halfGray)",
               borderRadius: "4px",
               overflow: "hidden",
             }}
@@ -298,7 +305,19 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
           </div>
         )}
 
-        {error && <div style={{ color: "#f55", fontSize: "0.84rem", padding: "2px 4px" }}>{error}</div>}
+        {error && (
+          <div
+            style={{
+              // No error token is readable as text on the dialog in every theme, so the border marks the error.
+              color: "var(--textColorPrimary)",
+              borderLeft: "3px solid var(--colorError)",
+              fontSize: "0.84rem",
+              padding: "2px 4px 2px 8px",
+            }}
+          >
+            {error}
+          </div>
+        )}
 
         {/* Footer buttons */}
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
@@ -313,8 +332,9 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
                 padding: "6px 14px",
                 cursor: "pointer",
                 borderRadius: "4px",
-                border: "1px solid rgba(255,255,255,0.2)",
+                border: "1px solid var(--halfGray)",
                 background: "transparent",
+                color: "var(--textColorPrimary)",
               }}
             >
               ← Back
@@ -327,8 +347,9 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
               padding: "6px 14px",
               cursor: "pointer",
               borderRadius: "4px",
-              border: "1px solid rgba(255,255,255,0.2)",
+              border: "1px solid var(--halfGray)",
               background: "transparent",
+              color: "var(--textColorPrimary)",
             }}
           >
             Cancel
@@ -343,8 +364,11 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
                 cursor: isValid ? "pointer" : "not-allowed",
                 borderRadius: "4px",
                 border: "none",
-                background: isValid ? "#0084d1" : "#555",
-                color: "#fff",
+                // --textColorOnPrimary is not in v2.0.0: --sidebarActiveColor is the host's text on --primary in
+                // both releases, and follows a custom accent. A disabled button keeps its fixed colors, because no
+                // theme variable is readable on --buttonDisabledBackground in every theme.
+                background: isValid ? "var(--buttonPrimaryBackground)" : "#555",
+                color: isValid ? "var(--sidebarActiveColor)" : "#fff",
               }}
             >
               Review YAML →
@@ -360,9 +384,8 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
                 cursor: saving ? "not-allowed" : "pointer",
                 borderRadius: "4px",
                 border: "none",
-                background: "#0084d1",
-                color: "#fff",
-                opacity: saving ? 0.6 : 1,
+                background: saving ? "#555" : "var(--buttonPrimaryBackground)",
+                color: saving ? "#fff" : "var(--sidebarActiveColor)",
               }}
             >
               {saving ? "Creating…" : "Create Certificate"}
