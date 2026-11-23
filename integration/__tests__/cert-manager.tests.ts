@@ -17,9 +17,11 @@ import {
   clickMenuItem,
   confirmDialog,
   connectApp,
+  detailsDrawer,
   detailsItemValue,
   disconnectKindCluster,
   expectDetailsApiVersion,
+  expectToolbarIconOnly,
   installExtension,
   openDetails,
   openKindCluster,
@@ -166,6 +168,34 @@ describe.skipIf(!(await appReady({ cluster: true })))(
       }
 
       await frame.locator("body").press("Escape");
+    });
+
+    it.each(kindViews)(
+      "shows the extension's items as icons in the details toolbar of the $kind test object",
+      async ({ pageId, detailsItem, menuItems }) => {
+        const row = await openListPage(frame, pageId);
+
+        await openDetails(frame, row, detailsItem);
+
+        for (const title of menuItems) {
+          await expectToolbarIconOnly(frame, title);
+        }
+      },
+    );
+
+    it("shows the X.509 data of the Certificate on rows of their own", async () => {
+      const row = await openListPage(frame, "cert-manager-certificates");
+
+      await openDetails(frame, row, "Subject");
+
+      // Each level of drawer items gives a value what is left of the width, and
+      // a field nested in another wraps in the middle of its words.
+      const nested = detailsDrawer(frame)
+        .locator(".DrawerItem .DrawerItem")
+        .filter({ has: frame.locator(".name").getByText("Subject", { exact: true }) });
+
+      expect(await nested.count()).toBe(0);
+      expect(await detailsItemValue(frame, "Subject").textContent()).toBe("CN=test.example.com");
     });
 
     it("asks for a new issuance of the Certificate, after asking", async () => {

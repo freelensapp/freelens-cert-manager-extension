@@ -973,13 +973,12 @@ export async function openRowMenu(frame: Frame, row: Locator): Promise<Locator> 
 }
 
 /**
- * The item of the menu with the title. The items of this extension carry their
- * title as plain text after the name of their icon, with no `.title` element.
+ * The title of the item of the menu. It has to be a `.title` element: in the
+ * toolbar of the details drawer the host hides only that, and any other text
+ * of the item stays on top of the next icon.
  */
 function menuItem(menu: Locator, title: string): Locator {
-  const escaped = title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-  return menu.locator(".MenuItem").filter({ hasText: new RegExp(`${escaped}\\s*$`) });
+  return menu.locator(".MenuItem .title").getByText(title, { exact: true });
 }
 
 /**
@@ -996,6 +995,20 @@ export async function waitForMenuItem(menu: Locator, title: string) {
 export async function clickMenuItem(frame: Frame, menu: Locator, title: string) {
   await menuItem(menu, title).first().click();
   await dismissNotifications(frame);
+}
+
+/**
+ * Throws unless the toolbar of the open details drawer has the item with the
+ * title and shows its icon alone.
+ */
+export async function expectToolbarIconOnly(frame: Frame, title: string) {
+  const label = menuItem(detailsDrawer(frame).locator(".MenuActions.toolbar"), title);
+
+  await label.first().waitFor({ state: "attached", ...viewTimeout });
+
+  if (await label.first().isVisible()) {
+    throw new Error(`The toolbar of the details drawer shows the label of ${title}`);
+  }
 }
 
 /**

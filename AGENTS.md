@@ -282,8 +282,17 @@ gone from the Custom Resources tree.
   `apiVersions` from the model class. The components are cast to the type of the
   field with `as unknown as`, so the type check does not compare their `object`
   with the model of the registration: check it by hand.
-- The props of a details panel or a menu item are `{ object: <Model> }`, the
-  concrete model class, and only what the host passes.
+- The props of a details panel are `{ object: <Model> }`, the concrete model
+  class, and only what the host passes.
+- A menu item takes `Common.Types.KubeObjectMenuItemProps<Model>`, that is
+  `{ object, toolbar }`, with the concrete model class. The host renders the
+  same item in the menu of a table row and, with `toolbar`, in the toolbar of
+  the details drawer, where it hides `.title`. So an item renders
+  `Renderer.Component.Icon` with `interactive={toolbar}` and a `title`, then its
+  label in `<span className="title">`. A plain-text label, as with the `icon`
+  prop of `MenuItem`, stays visible there and overlaps the icon. The Edit YAML
+  items pass `toolbar` on to `ResourceEditYamlMenuItem`, which renders this
+  markup.
 - The host renders a cluster page with `params` only. The pages here take no
   props.
 - **Edit YAML**: a menu item unmounts when its menu closes, so it cannot own a
@@ -820,8 +829,10 @@ either process:
   cert-manager release and a test object of each kind, and clicks through the
   extension's views: for each of the six kinds, the list page shows a row for
   the object, its details show an item of the extension's panel with its value
-  and no message of the error boundary, and the row's menu lists the extension's
-  items. It then clicks Force Renew, Approve and Deny, accepts their
+  and no message of the error boundary, the row's menu lists the extension's
+  items, and the toolbar of the details shows them as icons alone. The details
+  of the Certificate show the X.509 data of a Secret of the fixtures, on rows of
+  their own. It then clicks Force Renew, Approve and Deny, accepts their
   confirmation, and checks the condition each one writes to the status of the
   object. Each view is an `it` that navigates by itself, so that it does not
   depend on the state another left. They do not check every field, the Custom
