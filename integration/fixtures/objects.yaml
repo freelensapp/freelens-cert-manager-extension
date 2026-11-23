@@ -1,0 +1,74 @@
+# The namespaced test objects, one of each kind, which the session applies in
+# its namespace, and a second CertificateRequest to deny. No controller runs, so
+# they have no status until the session or a menu item of the extension writes
+# one. They refer to an issuer that does not exist, whose name is not the name
+# of any test object, so that a table row is found by the name of its object.
+# The request is a CSR for test.example.com, whose private key was thrown away.
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: test
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: test
+spec:
+  secretName: test-tls
+  dnsNames:
+  - test.example.com
+  issuerRef:
+    name: test-issuer
+    kind: Issuer
+---
+apiVersion: cert-manager.io/v1
+kind: CertificateRequest
+metadata:
+  name: test
+spec:
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQkF6Q0Jxd0lCQURBYk1Sa3dGd1lEVlFRRERCQjBaWE4wTG1WNFlXMXdiR1V1WTI5dE1Ga3dFd1lIS29aSQp6ajBDQVFZSUtvWkl6ajBEQVFjRFFnQUV0TDdyRW5SY3FSKzFYU1hTc1RBcDA5bXpLMENaZ0ovK2ZRRXRBOTRTCjB4VXUxM1JIQjVJcHFlUXE0UkI5ejdmclMzWElDNVlXbWtUc0dSdXhoOEw2MWFBdU1Dd0dDU3FHU0liM0RRRUoKRGpFZk1CMHdHd1lEVlIwUkJCUXdFb0lRZEdWemRDNWxlR0Z0Y0d4bExtTnZiVEFLQmdncWhrak9QUVFEQWdOSApBREJFQWlBUlUxZXBtSzBsb1J2eHVMcDRNMWhUc1g2NzQvdGQzK0Zjb2ZnS1hVM3hGZ0lnWGNYbVg4T1lycGtJClVoNC9QbUF5QzNxTlZ3VHJFRFl3dlNPeDhOcHppeG89Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+  issuerRef:
+    name: test-issuer
+    kind: Issuer
+---
+apiVersion: cert-manager.io/v1
+kind: CertificateRequest
+metadata:
+  name: test-deny
+spec:
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQkF6Q0Jxd0lCQURBYk1Sa3dGd1lEVlFRRERCQjBaWE4wTG1WNFlXMXdiR1V1WTI5dE1Ga3dFd1lIS29aSQp6ajBDQVFZSUtvWkl6ajBEQVFjRFFnQUV0TDdyRW5SY3FSKzFYU1hTc1RBcDA5bXpLMENaZ0ovK2ZRRXRBOTRTCjB4VXUxM1JIQjVJcHFlUXE0UkI5ejdmclMzWElDNVlXbWtUc0dSdXhoOEw2MWFBdU1Dd0dDU3FHU0liM0RRRUoKRGpFZk1CMHdHd1lEVlIwUkJCUXdFb0lRZEdWemRDNWxlR0Z0Y0d4bExtTnZiVEFLQmdncWhrak9QUVFEQWdOSApBREJFQWlBUlUxZXBtSzBsb1J2eHVMcDRNMWhUc1g2NzQvdGQzK0Zjb2ZnS1hVM3hGZ0lnWGNYbVg4T1lycGtJClVoNC9QbUF5QzNxTlZ3VHJFRFl3dlNPeDhOcHppeG89Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+  issuerRef:
+    name: test-issuer
+    kind: Issuer
+---
+apiVersion: acme.cert-manager.io/v1
+kind: Order
+metadata:
+  name: test
+spec:
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQkF6Q0Jxd0lCQURBYk1Sa3dGd1lEVlFRRERCQjBaWE4wTG1WNFlXMXdiR1V1WTI5dE1Ga3dFd1lIS29aSQp6ajBDQVFZSUtvWkl6ajBEQVFjRFFnQUV0TDdyRW5SY3FSKzFYU1hTc1RBcDA5bXpLMENaZ0ovK2ZRRXRBOTRTCjB4VXUxM1JIQjVJcHFlUXE0UkI5ejdmclMzWElDNVlXbWtUc0dSdXhoOEw2MWFBdU1Dd0dDU3FHU0liM0RRRUoKRGpFZk1CMHdHd1lEVlIwUkJCUXdFb0lRZEdWemRDNWxlR0Z0Y0d4bExtTnZiVEFLQmdncWhrak9QUVFEQWdOSApBREJFQWlBUlUxZXBtSzBsb1J2eHVMcDRNMWhUc1g2NzQvdGQzK0Zjb2ZnS1hVM3hGZ0lnWGNYbVg4T1lycGtJClVoNC9QbUF5QzNxTlZ3VHJFRFl3dlNPeDhOcHppeG89Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+  dnsNames:
+  - test.example.com
+  issuerRef:
+    name: test-issuer
+    kind: Issuer
+---
+apiVersion: acme.cert-manager.io/v1
+kind: Challenge
+metadata:
+  name: test
+spec:
+  authorizationURL: https://acme.example.com/authz/test
+  dnsName: test.example.com
+  issuerRef:
+    name: test-issuer
+    kind: Issuer
+  key: test-key
+  solver:
+    http01:
+      ingress: {}
+  token: test-token
+  type: HTTP-01
+  url: https://acme.example.com/challenge/test

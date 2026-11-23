@@ -1,0 +1,8 @@
+# The cluster-scoped test object. Deleting the CRDs at the end of a session
+# deletes it too.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: test
+spec:
+  selfSigned: {}
