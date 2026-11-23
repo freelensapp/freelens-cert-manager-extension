@@ -1,0 +1,31 @@
+# Two certificates of the CA Issuer. The second lasts 20 days, so the Certificates
+# page counts it as expiring and its validity bar is amber.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: example-app
+spec:
+  secretName: example-app-tls
+  commonName: app.example.com
+  dnsNames:
+  - app.example.com
+  - www.app.example.com
+  duration: 2160h
+  renewBefore: 360h
+  issuerRef:
+    name: example-ca
+    kind: Issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: example-expiring
+spec:
+  secretName: example-expiring-tls
+  dnsNames:
+  - expiring.example.com
+  duration: 480h
+  renewBefore: 24h
+  issuerRef:
+    name: example-ca
+    kind: Issuer

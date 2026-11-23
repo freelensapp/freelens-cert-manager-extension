@@ -1,0 +1,13 @@
+# An Ingress that serves the Secret of example-app, for "Used by Ingresses" in
+# the details of the Certificate. It routes nothing.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-app
+spec:
+  tls:
+  - hosts:
+    - app.example.com
+    secretName: example-app-tls
+  rules:
+  - host: app.example.com
