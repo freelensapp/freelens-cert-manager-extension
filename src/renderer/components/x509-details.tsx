@@ -103,7 +103,8 @@ export function X509Details({ secretName, namespace }: Props) {
   if (!info) return null;
 
   return (
-    <Renderer.Component.DrawerItem name="X.509 Details" labelsOnly>
+    <>
+      <Renderer.Component.DrawerTitle>X.509 Details</Renderer.Component.DrawerTitle>
       {info.subject && <Renderer.Component.DrawerItem name="Subject">{info.subject}</Renderer.Component.DrawerItem>}
 
       {info.issuerDN && <Renderer.Component.DrawerItem name="Issuer DN">{info.issuerDN}</Renderer.Component.DrawerItem>}
@@ -119,6 +120,6 @@ export function X509Details({ secretName, namespace }: Props) {
       <Renderer.Component.DrawerItem name="SHA-256 Fingerprint">
         <span style={{ fontFamily: "monospace", fontSize: "0.8em", wordBreak: "break-all" }}>{info.fingerprint}</span>
       </Renderer.Component.DrawerItem>
-    </Renderer.Component.DrawerItem>
+    </>
   );
 }
