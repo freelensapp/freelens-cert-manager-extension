@@ -1,6 +1,6 @@
 {
   "name": "@freelensapp/cert-manager-extension",
-  "version": "0.7.1",
+  "version": "0.7.2-1",
   "description": "Freelens extension for cert-manager",
   "repository": {
     "type": "git",
