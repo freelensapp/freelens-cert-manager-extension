@@ -840,15 +840,25 @@ async function closeDetails(frame: Frame) {
 }
 
 /**
- * Throws when the extension's error boundary rendered its error page inside
- * the locator.
+ * The message that the extension's `ErrorBoundary` renders in place of a view
+ * whose component threw.
+ */
+function errorBoundaryMessage(locator: Locator): Locator {
+  return locator.getByText(/^\[cert-manager\] \S+ crashed:$/);
+}
+
+/**
+ * Throws when the extension's error boundary rendered its message inside the
+ * locator.
  */
 async function expectNoErrorPage(locator: Locator, where: string) {
-  // The class of `ErrorPage`, as CSS modules name it in the bundle.
-  const errorPages = await locator.locator('[class*="_errorPage_"]').count();
+  const messages = errorBoundaryMessage(locator);
+  const count = await messages.count();
 
-  if (errorPages > 0) {
-    throw new Error(`${where} shows ${errorPages} error page(s) of the extension`);
+  if (count > 0) {
+    const text = await messages.first().locator("..").innerText();
+
+    throw new Error(`${where} shows the error boundary of the extension: ${text.replaceAll("\n", " ")}`);
   }
 }
 
@@ -864,7 +874,8 @@ export async function openListPage(frame: Frame, pageId: string, objectName = te
     .locator(".TableRow")
     .filter({ has: frame.locator(".TableCell").getByText(objectName, { exact: true }) });
 
-  await row.waitFor(viewTimeout);
+  // A page that crashed never shows the row, so the message ends the wait too.
+  await row.or(errorBoundaryMessage(frame.locator("main"))).first().waitFor(viewTimeout);
   await expectNoErrorPage(frame.locator("main"), "The list page");
 
   return row;
@@ -884,7 +895,13 @@ export function detailsDrawer(frame: Frame): Locator {
 export async function waitForDetailsItem(frame: Frame, itemName: string) {
   const details = detailsDrawer(frame);
 
-  await details.locator(".DrawerItem .name").getByText(itemName, { exact: true }).first().waitFor(viewTimeout);
+  // A panel that crashed never shows the item, so the message ends the wait too.
+  await details
+    .locator(".DrawerItem .name")
+    .getByText(itemName, { exact: true })
+    .or(errorBoundaryMessage(details))
+    .first()
+    .waitFor(viewTimeout);
   await expectNoErrorPage(details, "The details drawer");
 }
 
