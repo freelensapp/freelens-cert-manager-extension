@@ -34,7 +34,6 @@ export function CertificateForceRenewMenuItem({ object: cert }: Props) {
           if (!cluster) throw new Error("No active cluster");
           const api = Renderer.K8sApi.KubeJsonApi.forCluster(cluster.id);
 
-          // biome-ignore lint/suspicious/noExplicitAny: raw KubeObject property access
           const rawCert = cert as any;
           const existingConditions = ((rawCert.status?.conditions ?? []) as Array<{ type: string }>).filter(
             (c: { type: string }) => c.type !== "Issuing",

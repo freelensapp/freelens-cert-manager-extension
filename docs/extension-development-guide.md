@@ -31,7 +31,7 @@ Freelens v2 introduces a **breaking** extension API incompatible with v1. Key fa
 
 ## Project Structure
 
-```
+```text
 my-extension/
 ├── src/
 │   ├── main/

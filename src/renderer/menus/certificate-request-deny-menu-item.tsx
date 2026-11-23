@@ -37,7 +37,6 @@ export function CertificateRequestDenyMenuItem({ object: cr }: Props) {
           if (!cluster) throw new Error("No active cluster");
           const api = Renderer.K8sApi.KubeJsonApi.forCluster(cluster.id);
 
-          // biome-ignore lint/suspicious/noExplicitAny: raw KubeObject property access
           const rawCr = cr as any;
           const existingConditions = ((rawCr.status?.conditions ?? []) as Array<{ type: string }>).filter(
             (c: { type: string }) => c.type !== "Approved" && c.type !== "Denied",
