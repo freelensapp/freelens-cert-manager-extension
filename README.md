@@ -205,9 +205,11 @@ Every action on an existing object, except Edit YAML, asks first:
 - **Related objects come from what is loaded.** The details of a Certificate, a
   CertificateRequest or an Order list the objects they own once the page of
   that kind has been opened in the session.
-- **A page opened before the CRDs keeps its notice.** A list page that was open
-  while cert-manager was being installed says that it is not installed until
-  you leave the page and come back.
+- **A page open while cert-manager is being installed can stay empty.** The API
+  server can answer the first request for a CRD it has just created with a 429.
+  Freelens shows a warning in the header of the list and does not ask again by
+  itself, so the list stays empty until you change the namespace filter or leave
+  the page and come back.
 
 ## Build from the source
 

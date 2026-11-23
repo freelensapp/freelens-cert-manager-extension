@@ -5,6 +5,7 @@
 
 import { Renderer } from "@freelensapp/extensions";
 import { load } from "js-yaml";
+import { observer } from "mobx-react";
 import { useState } from "react";
 import {
   Certificate,
@@ -31,7 +32,7 @@ function certIsReady(obj: Renderer.K8sApi.KubeObject): boolean {
   return (certStatus(obj).conditions ?? []).some((c) => c.type === "Ready" && c.status === "True");
 }
 
-export function CertificatesPage() {
+export const CertificatesPage = observer(function CertificatesPage() {
   const [wizardOpen, setWizardOpen] = useState(false);
 
   let store: ReturnType<typeof Certificate.getStore<Certificate>>;
@@ -93,4 +94,4 @@ export function CertificatesPage() {
       <YamlEditorDialogHost />
     </>
   );
-}
+});

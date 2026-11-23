@@ -5,6 +5,7 @@
 
 import { Renderer } from "@freelensapp/extensions";
 import { load } from "js-yaml";
+import { observer } from "mobx-react";
 import { useState } from "react";
 import { ClusterIssuer, type ClusterIssuerApi, type ClusterIssuerStore } from "../../common/api";
 import { getClusterIssuerType, isClusterIssuerReady } from "../../common/api/accessors";
@@ -20,7 +21,7 @@ spec:
   selfSigned: {}
 `;
 
-export function ClusterIssuersPage() {
+export const ClusterIssuersPage = observer(function ClusterIssuersPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [createYaml, setCreateYaml] = useState(CLUSTER_ISSUER_TEMPLATE);
 
@@ -75,4 +76,4 @@ export function ClusterIssuersPage() {
       <YamlEditorDialogHost />
     </>
   );
-}
+});

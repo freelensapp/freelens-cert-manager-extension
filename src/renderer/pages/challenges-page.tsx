@@ -4,12 +4,13 @@
  */
 
 import { Renderer } from "@freelensapp/extensions";
+import { observer } from "mobx-react";
 import { Challenge, type ChallengeApi } from "../../common/api";
 import { acmeStateLabel, getChallengeSpec, getChallengeStatus } from "../../common/api/accessors";
 import { YamlEditorDialogHost } from "../components/yaml-editor-dialog-host";
 import { NotInstalled } from "./not-installed";
 
-export function ChallengesPage() {
+export const ChallengesPage = observer(function ChallengesPage() {
   let store: ReturnType<typeof Challenge.getStore<Challenge>>;
   try {
     store = Challenge.getStore<Challenge>();
@@ -50,4 +51,4 @@ export function ChallengesPage() {
       <YamlEditorDialogHost />
     </>
   );
-}
+});

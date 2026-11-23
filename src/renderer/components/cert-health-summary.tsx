@@ -71,9 +71,8 @@ interface Props {
 }
 
 export function CertHealthSummary({ store }: Props) {
-  const certs = store.items as Certificate[];
-  if (certs.length === 0) return null;
-
+  // `items` keeps the objects of the namespaces selected before; the list shows `contextItems`.
+  const certs = store.contextItems as Certificate[];
   const { total, ready, expiringSoon, expired } = computeCounts(certs);
   const notReady = total - ready;
 
@@ -84,6 +83,10 @@ export function CertHealthSummary({ store }: Props) {
         gap: "8px",
         padding: "8px 0 4px",
         flexWrap: "wrap",
+        // With nothing to count, while the list loads, after a failed list or in an empty namespace, the row keeps its
+        // place, hidden: the menu of the namespace filter does not follow the filter, so a row that appeared under an
+        // open menu would leave the menu on top of the filter.
+        visibility: certs.length > 0 ? "visible" : "hidden",
       }}
     >
       <Tile value={total} label="Total" color="var(--colorTextPrimary, currentColor)" />

@@ -4,12 +4,13 @@
  */
 
 import { Renderer } from "@freelensapp/extensions";
+import { observer } from "mobx-react";
 import { Order, type OrderApi } from "../../common/api";
 import { acmeStateLabel, getOrderSpec, getOrderStatus } from "../../common/api/accessors";
 import { YamlEditorDialogHost } from "../components/yaml-editor-dialog-host";
 import { NotInstalled } from "./not-installed";
 
-export function OrdersPage() {
+export const OrdersPage = observer(function OrdersPage() {
   let store: ReturnType<typeof Order.getStore<Order>>;
   try {
     store = Order.getStore<Order>();
@@ -48,4 +49,4 @@ export function OrdersPage() {
       <YamlEditorDialogHost />
     </>
   );
-}
+});

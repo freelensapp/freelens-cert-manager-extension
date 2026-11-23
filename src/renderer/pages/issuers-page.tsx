@@ -5,6 +5,7 @@
 
 import { Renderer } from "@freelensapp/extensions";
 import { load } from "js-yaml";
+import { observer } from "mobx-react";
 import { useState } from "react";
 import { Issuer, type IssuerApi, type IssuerStore } from "../../common/api";
 import { getIssuerType, isIssuerReady } from "../../common/api/accessors";
@@ -21,7 +22,7 @@ spec:
   selfSigned: {}
 `;
 
-export function IssuersPage() {
+export const IssuersPage = observer(function IssuersPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [createYaml, setCreateYaml] = useState(ISSUER_TEMPLATE);
 
@@ -81,4 +82,4 @@ export function IssuersPage() {
       <YamlEditorDialogHost />
     </>
   );
-}
+});
