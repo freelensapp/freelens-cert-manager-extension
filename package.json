@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@peculiar/x509": "^3.1.0",
-    "js-yaml": "^5.5.0",
+    "js-yaml": "5.5.0",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
@@ -82,6 +82,7 @@
     "jsdom": "31.0.1",
     "mobx": "7.1.7",
     "mobx-react": "10.0.4",
+    "monaco-editor": "0.57.0",
     "playwright": "1.65.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",

@@ -65,8 +65,21 @@
       ],
       "matchManagers": ["npm"],
       "matchDepTypes": ["dependencies", "devDependencies"],
-      "matchPackageNames": ["!@freelensapp/**"],
+      "matchPackageNames": ["!@freelensapp/**", "!@peculiar/x509", "!reflect-metadata"],
       "overrideDatasource": "custom.freelens-catalog",
+      "rangeStrategy": "replace",
+      "minimumReleaseAge": "0 days",
+      "groupName": "Freelens dependencies"
+    },
+    {
+      "description": [
+        "The override of monaco-editor's dompurify in pnpm-workspace.yaml takes the dompurify of the Freelens catalog on main, as Freelens keeps its own override of it on its catalog's version. The rule above matches only dependencies and devDependencies, so without this one the override is looked up on npm and runs ahead of Freelens.",
+        "The custom datasource has no release dates, so minimumReleaseAge is off."
+      ],
+      "matchManagers": ["npm"],
+      "matchDepNames": ["monaco-editor>dompurify"],
+      "overrideDatasource": "custom.freelens-catalog",
+      "overridePackageName": "dompurify",
       "rangeStrategy": "replace",
       "minimumReleaseAge": "0 days",
       "groupName": "Freelens dependencies"

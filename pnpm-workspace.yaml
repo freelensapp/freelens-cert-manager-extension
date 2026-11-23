@@ -16,6 +16,12 @@ minimumReleaseAgeExclude:
   # Node 24.22.1, the fix of CVE-2026-111497.
   - electron@44.10.0
 
+overrides:
+  # monaco-editor pins dompurify 3.4.15, which GHSA-cg2g-xh64-v4q7 affects. The
+  # same override as in Freelens, on the version of its catalog. monaco-editor
+  # is here for its types only: the bundle takes the editor from the host.
+  monaco-editor>dompurify: 3.4.18
+
 shellEmulator: true
 
 # Fail the install, instead of printing one warning line, when a library the
