@@ -1,34 +1,50 @@
-# Study directory - local only, not tracked in VCS
-.study/
-
-# Node.js
-node_modules/
-dist/
-.cache/
-
-# Environment
-.env
-.env.local
-
-# OS
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Test coverage
-coverage/
-*.lcov
-
-# Logs
+*.d.ts
+*.gz
+*.lock
+!mise.lock
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.map
+*.out
+*.tgz
+*.tmp
+*~
+?.*
 
-# Generaed files
-freelens-cert-manager-*.tgz
+!custom.d.ts
+!env.d.ts
+!*.d.css.ts
+!*.d.scss.ts
+
+/dist/
+
+/freelens/
+
+.turbo
+
+/coverage/
+/node_modules/
+
+# Scratch space of the CI agent, which checks out Freelens at tmp/freelens.
+/tmp/
+
+/.nyc_output/
+
+# Snapshots, screenshots and console logs written by the Playwright MCP server.
+/.playwright-mcp/
+
+*.DS_Store
+/.idea
+/.vscode
+
+# Credentials and keys. Keep in sync with the Security section of AGENTS.md
+# and the permissions.deny rules in .claude/settings.json.
+.env
+.env.*
+.envrc
+.npmrc
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key

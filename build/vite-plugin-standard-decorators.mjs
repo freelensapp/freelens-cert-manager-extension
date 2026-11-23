@@ -1,13 +1,18 @@
 /**
- * Author: Maifee Ul Asad <maifeeulasad@gmail.com>
- * Co-Author: Claude Sonnet 4.6 <noreply@anthropic.com>
- *
- * Source: https://github.com/freelensapp/freelens-example-extension/blob/main/build/vite-plugin-standard-decorators.mjs
- * License: MIT — Copyright (c) Freelens Authors. Adapted for freelens-cert-manager.
- *
- * Lowers TC39 Stage 3 standard decorators before Oxc, which only handles
- * legacy decorators. MobX 7 uses standard decorators exclusively.
+ * Copyright (c) Freelens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+
+// Lowers standard (TC39 Stage 3) decorators for Vite and Vitest.
+//
+// MobX 7 supports only standard decorators, so the sources are compiled
+// without `experimentalDecorators`. Oxc, which transpiles TypeScript for
+// Vite 8 and Vitest 4, lowers legacy decorators only: it passes standard ones
+// through untouched, and neither Node nor Electron can run them yet. This
+// plugin runs before Oxc and hands every TypeScript module that has a
+// decorator to esbuild, which lowers the decorators (and the `accessor` fields
+// they sit on) and nothing else. Oxc then processes the result like any other
+// module, JSX included.
 
 import { transform } from "esbuild";
 
@@ -22,11 +27,7 @@ export function standardDecorators() {
     async transform(code, id) {
       const path = id.split("?", 1)[0];
 
-      if (
-        !typeScriptModule.test(path) ||
-        path.includes("/node_modules/") ||
-        !decoratorAtLineStart.test(code)
-      ) {
+      if (!typeScriptModule.test(path) || path.includes("/node_modules/") || !decoratorAtLineStart.test(code)) {
         return null;
       }
 
