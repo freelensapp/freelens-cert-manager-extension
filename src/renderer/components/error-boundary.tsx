@@ -24,9 +24,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.error) {
       return (
-        <div
-          style={{ color: "#ef5350", padding: "12px", fontFamily: "monospace", fontSize: "12px" }}
-        >
+        <div style={{ color: "#ef5350", padding: "12px", fontFamily: "monospace", fontSize: "12px" }}>
           <strong>[cert-manager] {this.props.name} crashed:</strong>
           <br />
           {this.state.error.message}

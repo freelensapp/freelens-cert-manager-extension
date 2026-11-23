@@ -6,17 +6,8 @@
 import { Renderer } from "@freelensapp/extensions";
 import { load } from "js-yaml";
 import { useState } from "react";
-import {
-  CertificateRequest,
-  type CertificateRequestApi,
-  type CertificateRequestStore,
-} from "../../common/api";
-import {
-  getCertReqSpec,
-  isCertReqApproved,
-  isCertReqDenied,
-  isCertReqReady,
-} from "../../common/api/accessors";
+import { CertificateRequest, type CertificateRequestApi, type CertificateRequestStore } from "../../common/api";
+import { getCertReqSpec, isCertReqApproved, isCertReqDenied, isCertReqReady } from "../../common/api/accessors";
 import { YamlEditorDialog } from "../components/yaml-editor-dialog";
 import { YamlEditorDialogHost } from "../components/yaml-editor-dialog-host";
 import { NotInstalled } from "./not-installed";

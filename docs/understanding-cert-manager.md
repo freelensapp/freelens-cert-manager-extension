@@ -1,10 +1,12 @@
 Author:
+
 - Maifee Ul Asad
 - Qwen 3.7 Plus
 
 To work with **cert-manager** in Kubernetes, it is important to understand that cert-manager is a Kubernetes controller/operator. It does not have its own standalone database; instead, it extends the Kubernetes API using **Custom Resource Definitions (CRDs)**.
 
 Therefore, you will use two primary tools to interact with it:
+
 1. **`kubectl`**: For standard **CRUD** (Create, Read, Update, Delete) operations on cert-manager resources.
 2. **`cmctl`**: The official **cert-manager CLI** for specialized tasks like debugging, manual renewals, and inspecting certificates.
 
@@ -15,11 +17,12 @@ Here is the comprehensive documentation for all commands, arguments, and flags.
 # PART 1: `kubectl` (CRUD Operations)
 
 Cert-manager introduces several Custom Resources (CRs). The most common ones you will interact with are:
+
 -   `issuer` / `clusterissuer`: Defines _who_ can issue certificates (e.g., Let's Encrypt, Vault, SelfSigned).
 -   `certificate`: Defines _what_ certificate you want (domain names, secret name to store it in).
 -   `certificaterequest`: The actual request sent to the Issuer (usually created automatically by the `certificate` controller).
 
-### 1. CREATE (Applying Configurations)
+## 1. CREATE (Applying Configurations)
 
 Because cert-manager resources are complex, they are almost always created via YAML manifests.
 
@@ -34,7 +37,7 @@ kubectl apply -f ./cert-manager-configs/
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
 ```
 
-### 2. READ (Viewing Resources)
+## 2. READ (Viewing Resources)
 
 ```bash
 # List all certificates in the current namespace
@@ -61,7 +64,7 @@ kubectl get orders
 kubectl get challenges
 ```
 
-#### Highly Useful `kubectl` Arguments/Flags for Cert-Manager:
+### Highly Useful `kubectl` Arguments/Flags for Cert-Manager:
 
 -   `-o wide` or `--output=wide`: **Essential for certificates.** Shows the `READY` status, `SECRET NAME`, and `EXPIRATION DATE` in the list view.
     -   _Example:_ `kubectl get cert -o wide`
@@ -70,7 +73,7 @@ kubectl get challenges
 -   `-w` or `--watch`: Watches the resource in real-time. Great for watching a `challenge` or `certificaterequest` complete.
 -   `-n <namespace>` or `--namespace=<namespace>`: Targets a specific namespace. (Note: `ClusterIssuer` is cluster-wide and ignores this flag).
 
-### 3. UPDATE (Modifying Resources)
+## 3. UPDATE (Modifying Resources)
 
 ```bash
 # Open the resource in your default terminal editor (vi/nano) to update it
@@ -84,7 +87,7 @@ kubectl patch certificate <cert-name> --type merge -p '{"metadata":{"annotations
 kubectl label certificate <cert-name> environment=production
 ```
 
-### 4. DELETE (Removing Resources)
+## 4. DELETE (Removing Resources)
 
 ```bash
 # Delete a specific certificate (This will NOT delete the underlying Kubernetes Secret by default)
@@ -107,7 +110,7 @@ kubectl delete secret <secret-name>
 
 _(If you don't have it installed, install it via Homebrew: `brew install cmctl`, or download the binary from the cert-manager GitHub releases)._
 
-### 1. Health and Status Checks
+## 1. Health and Status Checks
 
 ```bash
 # Check if the cert-manager API is ready and functioning
@@ -123,7 +126,7 @@ cmctl status certificate <cert-name>
 cmctl status certificate <cert-name> -n <namespace>
 ```
 
-### 2. Certificate Management (Renewals & Creation)
+## 2. Certificate Management (Renewals & Creation)
 
 ```bash
 # Manually force a certificate to renew immediately (bypasses the renewal window)
@@ -146,7 +149,7 @@ cmctl create certificaterequest <request-name> \
   --is-ca=false
 ```
 
-### 3. Inspection and Debugging
+## 3. Inspection and Debugging
 
 ```bash
 # Inspect a Kubernetes Secret that contains a TLS certificate
@@ -161,9 +164,10 @@ cmctl inspect secret <secret-name> -n <namespace>
 cmctl convert <filename.yaml>
 ```
 
-#### `cmctl` Global Arguments/Flags:
+### `cmctl` Global Arguments/Flags:
 
 These flags can be appended to almost any `cmctl` command:
+
 -   `-n <namespace>` or `--namespace=<namespace>`: Specify the namespace.
 -   `--context=<context>`: Use a specific kubeconfig context (if you have multiple clusters).
 -   `--kubeconfig=<path>`: Path to a specific kubeconfig file.
@@ -176,7 +180,7 @@ These flags can be appended to almost any `cmctl` command:
 
 When cert-manager fails, it is usually due to DNS challenges, RBAC issues, or webhook failures. Here are the commands to troubleshoot those specific scenarios.
 
-### 1. Checking Controller Logs
+## 1. Checking Controller Logs
 
 If a certificate is stuck in `Ready: False`, you need to see what the cert-manager controller is thinking.
 
@@ -194,7 +198,7 @@ kubectl logs -n cert-manager deployment/cert-manager-webhook -f
 kubectl logs -n cert-manager deployment/cert-manager-cainjector -f
 ```
 
-### 2. Checking Kubernetes Events
+## 2. Checking Kubernetes Events
 
 Cert-manager posts events to the Kubernetes event stream when it encounters errors (like failing an HTTP-01 or DNS-01 challenge).
 
@@ -206,7 +210,7 @@ kubectl get events --field-selector involvedObject.name=<cert-name> --sort-by='.
 kubectl get events | grep cert-manager
 ```
 
-### 3. Debugging ACME Challenges (Let's Encrypt)
+## 3. Debugging ACME Challenges (Let's Encrypt)
 
 If Let's Encrypt is failing to verify your domain, you need to look at the `Challenge` resource.
 
@@ -221,7 +225,7 @@ kubectl describe challenge <challenge-name>
 # Common errors: "Timeout" (DNS not propagating), "Unauthorized" (wrong file served on HTTP-01).
 ```
 
-### 4. Verifying RBAC and Service Accounts
+## 4. Verifying RBAC and Service Accounts
 
 Sometimes cert-manager fails because it doesn't have permission to create secrets or read ingress resources.
 
@@ -235,7 +239,7 @@ kubectl get rolebindings -n <namespace> | grep cert-manager
 
 ---
 
-### Summary Cheat Sheet for Daily Use
+## Summary Cheat Sheet for Daily Use
 
 | Task                                 | Command                                                       |
 | :----------------------------------- | :------------------------------------------------------------ |

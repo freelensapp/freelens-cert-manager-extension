@@ -1,203 +1,354 @@
-# freelens-cert-manager
+# @freelensapp/cert-manager-extension
 
-A [Freelens](https://github.com/freelensapp/freelens) v2 extension for managing [cert-manager](https://cert-manager.io/) resources directly from your Kubernetes dashboard.
+<!-- markdownlint-disable MD013 -->
 
-[![Latest release](https://img.shields.io/github/v/release/maifeeulasad/freelens-cert-manager)](https://github.com/maifeeulasad/freelens-cert-manager/releases/latest)
-[![CI](https://github.com/maifeeulasad/freelens-cert-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/maifeeulasad/freelens-cert-manager/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/maifeeulasad/freelens-cert-manager/actions/workflows/codeql.yml/badge.svg)](https://github.com/maifeeulasad/freelens-cert-manager/actions/workflows/codeql.yml)
-[![npm downloads](https://img.shields.io/npm/dm/freelens-cert-manager)](https://www.npmjs.com/package/freelens-cert-manager)
-[![GitHub Downloads](https://img.shields.io/github/downloads/maifeeulasad/freelens-cert-manager/total)](https://github.com/maifeeulasad/freelens-cert-manager/releases)
-[![npm provenance](https://img.shields.io/badge/npm-provenance%20✓-brightgreen)](https://www.npmjs.com/package/freelens-cert-manager)
-[![GitHub Attestation](https://img.shields.io/badge/GitHub-attestation%20✓-blue)](https://github.com/maifeeulasad/freelens-cert-manager/attestations)
+[![Home](https://img.shields.io/badge/%F0%9F%8F%A0-freelens.app-02a7a0)](https://freelens.app)
+[![GitHub](https://img.shields.io/github/stars/freelensapp/freelens-cert-manager-extension?style=flat&label=GitHub%20%E2%AD%90)](https://github.com/freelensapp/freelens-cert-manager-extension)
+[![Release](https://img.shields.io/github/v/release/freelensapp/freelens-cert-manager-extension?display_name=tag&sort=semver)](https://github.com/freelensapp/freelens-cert-manager-extension/releases)
+[![Integration tests](https://github.com/freelensapp/freelens-cert-manager-extension/actions/workflows/integration-tests.yaml/badge.svg?branch=main)](https://github.com/freelensapp/freelens-cert-manager-extension/actions/workflows/integration-tests.yaml)
+[![npm](https://img.shields.io/npm/v/@freelensapp/cert-manager-extension.svg)](https://www.npmjs.com/package/@freelensapp/cert-manager-extension)
 
----
+<!-- markdownlint-enable MD013 -->
 
-## Features
+## Overview
 
-### Six cert-manager resource kinds
+[Freelens](https://freelens.app) extension for
+[cert-manager](https://cert-manager.io), the controller that issues and renews
+TLS certificates in a Kubernetes cluster.
 
-All six cert-manager resource types are registered and listed in the sidebar under **Cert Manager**:
+The extension lives in the cluster sidebar under **Cert Manager**:
+**Certificates**, **Issuers**, **ClusterIssuers**, **CertificateRequests**,
+**Orders** and **Challenges**. The Certificates page sums up the health of the
+certificates and shows how much of its validity each one has left. The details
+read the issued certificate from its Secret and link the objects of an issuance
+to each other, and the menus ask for a new issuance, approve or deny a request,
+delete what is stuck, and edit an object as YAML.
 
-| Resource           | Group                   | Sidebar icon        |
-| ------------------ | ----------------------- | ------------------- |
-| Certificate        | cert-manager.io/v1      | Green shield        |
-| CertificateRequest | cert-manager.io/v1      | Blue document       |
-| Issuer             | cert-manager.io/v1      | Amber columns       |
-| ClusterIssuer      | cert-manager.io/v1      | Purple globe        |
-| Order              | acme.cert-manager.io/v1 | Teal circular arrow |
-| Challenge          | acme.cert-manager.io/v1 | Red lightning bolt  |
+## Authors
 
-Each resource has a list page, a detail drawer, and context menu actions.
-
----
-
-### Certificate list page
-
-- **Validity bar** — a color-coded progress bar in every row showing how much of the certificate lifetime has elapsed, with a days-remaining label (green > 30 d, amber 7–30 d, red < 7 d / expired).
-- **Health summary bar** — live tile row above the list showing Total / Ready / Not-Ready / Expiring / Expired counts.
-- **Guided creation wizard** — clicking **+** opens a two-step form wizard: fill in name, namespace, DNS names, issuer, duration → review and optionally edit the generated YAML → create.
-
-### Certificate detail drawer
-
-- Spec fields: Secret name, Common Name, DNS Names, Issuer, Duration, Renew Before.
-- Validity bar (larger variant) with start and end dates.
-- **X.509 details** — fetches the managed TLS Secret and parses the certificate using `@peculiar/x509`: Subject DN, Issuer DN, Subject Alternative Names, Serial Number, Key Algorithm, SHA-256 fingerprint.
-- **Owned CertificateRequests** — clickable links to each CR that owns this certificate.
-- **Used by Ingresses** — lists Ingresses in the same namespace whose `spec.tls[].secretName` references this certificate's Secret.
-
-### Certificate context menu
-
-| Action           | Description                                                                                   |
-| ---------------- | --------------------------------------------------------------------------------------------- |
-| Force Renew      | Patches `cert-manager.io/trigger-renew` annotation (shows confirmation dialog with namespace) |
-| Delete (cascade) | Deletes the Certificate and its managed Secret                                                |
-| Edit YAML        | Opens the resource in an inline YAML editor                                                   |
-
----
-
-### CertificateRequest detail drawer
-
-- Issuer, Duration, Is CA, Usages, failure time.
-- **Parent Certificate link** — click to open the owning Certificate in the drawer.
-- **Owned Orders** — clickable links to Orders issued for this CR.
-
-### CertificateRequest context menu
-
-| Action    | Description                                                               |
-| --------- | ------------------------------------------------------------------------- |
-| Approve   | Calls `PUT .../approval` with an Approved condition (hidden once decided) |
-| Deny      | Calls `PUT .../approval` with a Denied condition (hidden once decided)    |
-| Edit YAML | Opens the resource in an inline YAML editor                               |
-
----
-
-### Order detail drawer
-
-- State (ACME state machine), Issuer, DNS Names, IP Addresses, Common Name, Duration, ACME URL, failure info, authorizations.
-- **Parent CertificateRequest link** — click to open the owning CR in the drawer.
-- **Owned Challenges** — clickable links to each Challenge for this Order.
-
-### Order context menu
-
-| Action         | Description                                                    |
-| -------------- | -------------------------------------------------------------- |
-| Delete (stuck) | Deletes a non-valid Order so cert-manager retries from scratch |
-| Edit YAML      | Opens the resource in an inline YAML editor                    |
-
----
-
-### Challenge detail drawer
-
-- State, Domain (with wildcard indicator), Challenge type, Issuer, presented/processing flags, token, authorization URL.
-
-### Challenge context menu
-
-| Action         | Description                                                                                                               |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Delete (stuck) | Deletes a non-valid Challenge so the parent Order retries; warns if the solver pod may leave the Challenge in Terminating |
-| Edit YAML      | Opens the resource in an inline YAML editor                                                                               |
-
----
-
-### Issuer / ClusterIssuer
-
-- Detail drawers show type (ACME, CA, SelfSigned, Vault, Venafi), ready status, and message.
-- Edit YAML context menu item.
-
----
-
-## Installation
-
-Download the latest `.tgz` from [Releases](https://github.com/maifeeulasad/freelens-cert-manager/releases/latest) and install it in Freelens:
-
-1. Open Freelens → **Extensions** (top-right menu or ⌘E / Ctrl+E).
-2. Drag the `.tgz` file onto the Extensions panel, or click **Install from file** and select it.
-3. Enable the extension.
-
-The extension is also published to npm as `freelens-cert-manager`:
-
-```sh
-# Freelens will resolve npm packages automatically when you enter the package name
-freelens-cert-manager
-```
-
----
+- [Maifee Ul Asad](https://github.com/maifeeulasad) created this extension and
+  maintains it.
+- [Roberto Bandini](https://github.com/robertobandini) reviewed it and brought
+  it into the organization, with its integration tests.
 
 ## Requirements
 
-- [Freelens](https://github.com/freelensapp/freelens) v2.x
-- [cert-manager](https://cert-manager.io/) installed in the target cluster (v1.x CRDs)
+- Freelens 2.0.0 or a later 2.x (extension API v2).
+- cert-manager 1.x, which serves `cert-manager.io/v1` and
+  `acme.cert-manager.io/v1`. The extension is tested with cert-manager 1.21.
 
----
+## Supported APIs
 
-## Architecture decisions
+| Group                  | API Version | Kind                 | Shown in            |
+| ---------------------- | ----------- | -------------------- | ------------------- |
+| `cert-manager.io`      | v1          | `Certificate`        | Certificates        |
+| `cert-manager.io`      | v1          | `CertificateRequest` | CertificateRequests |
+| `cert-manager.io`      | v1          | `Issuer`             | Issuers             |
+| `cert-manager.io`      | v1          | `ClusterIssuer`      | ClusterIssuers      |
+| `acme.cert-manager.io` | v1          | `Order`              | Orders              |
+| `acme.cert-manager.io` | v1          | `Challenge`          | Challenges          |
 
-| Decision                   | Rationale                                                                                                                                                                            |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Freelens v2 extension API  | Current stable host version                                                                                                                                                          |
-| Vite two-mode build        | Required by Freelens v2 (renderer ESM-only, main Node)                                                                                                                               |
-| MobX 7 standard decorators | Host ships MobX 7; legacy decorators break silently                                                                                                                                  |
-| React 19                   | Host-provided singleton; must not be bundled                                                                                                                                         |
-| pnpm                       | Matches Freelens example extension toolchain                                                                                                                                         |
-| Biome                      | Linter/formatter used by freelensapp org                                                                                                                                             |
-| @peculiar/x509             | Browser-compatible X.509 parser (Node crypto blocked in renderer)                                                                                                                    |
-| Raw-data accessors         | Freelens creates KubeObject instances from its own base class, not our subclasses — prototype getters are unreachable at runtime, so spec/status are read via direct property access |
+When the cluster does not serve a kind, its page says so. While the extension
+is enabled, the six kinds are left out of the Custom Resources tree of the
+cluster sidebar, so each of them is listed once, under Cert Manager.
 
----
+## Permissions
 
-## Development setup
+The pages list and watch the six kinds. The details of a Certificate also read
+the Secret it names, for the X.509 data, and list the Ingresses of its
+namespace. Without those permissions the two sections stay empty, and the rest
+of the panel works.
+
+The actions below write to the cluster, and each needs its own permission:
+
+| Action           | Permission                                                                             |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| Create (+)       | `create` on the kind                                                                   |
+| Edit YAML        | `update` on the kind                                                                   |
+| Force Renew      | `update` on `certificates/status`                                                      |
+| Approve, Deny    | `update` on `certificaterequests/status`, and `approve` on the `signers` of the issuer |
+| Delete (cascade) | `delete` on `certificates` and `secrets`                                               |
+| Delete (stuck)   | `delete` on `orders` or `challenges`                                                   |
+
+## Install
+
+Open Freelens and go to Extensions (`ctrl`+`shift`+`E` or
+`cmd`+`shift`+`E`). The field at the top takes a package name, the URL of a
+tarball, or the path to a tarball or a directory.
+
+### From the registry
+
+Enter `@freelensapp/cert-manager-extension` and press Install.
+
+Alternatively, open the following URL in the browser to install directly:
+
+[freelens://app/extensions/install/%40freelensapp%2Fcert-manager-extension](freelens://app/extensions/install/%40freelensapp%2Fcert-manager-extension)
+
+### From a release tarball
+
+Each
+[release](https://github.com/freelensapp/freelens-cert-manager-extension/releases)
+has the extension as `freelensapp-cert-manager-extension-<version>.tgz`, with
+its checksum in `freelensapp-cert-manager-extension-<version>.tgz.sha256`. Use
+a release whose major version matches your Freelens version.
+
+- Enter the URL of the `.tgz` asset and press Install. Freelens downloads the
+  `.tgz.sha256` next to it and checks the tarball against it.
+- Or download both files into one directory and enter the path to the `.tgz`,
+  or drop the `.tgz` on the Freelens window. Freelens checks it against the
+  `.tgz.sha256` next to it.
+
+### From a directory
+
+Build the extension (see below), then enter the path to your checkout, the
+directory with `package.json`, and press Install. Freelens runs the extension
+from that directory, from the files in `dist/`, and lists it as unverified.
+This is how you work on the extension: see
+[Development loop](#development-loop).
+
+## Getting started
+
+The objects in `examples/cert-manager/` show the views on a cluster with
+cert-manager installed:
 
 ```sh
-# Requires Node >= 24, pnpm 12
+kubectl apply -f examples/cert-manager/issuers.yaml
+kubectl apply -f examples/cert-manager/certificates.yaml
+kubectl apply -f examples/cert-manager/ingress.yaml
+```
+
+| File                | Objects                                                                                                                                 |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `issuers.yaml`      | the ClusterIssuer `example-selfsigned`, the CA Certificate `example-ca` it signs, and the Issuer `example-ca`, which signs with that CA |
+| `certificates.yaml` | `example-app`, valid for 90 days, and `example-expiring`, valid for 20 days, which the Certificates page counts as expiring             |
+| `ingress.yaml`      | the Ingress `example-app`, which serves the Secret of `example-app` and routes nothing                                                  |
+
+Open the cluster in Freelens and go to **Cert Manager**. The tiles above the
+Certificates list count the three certificates, and the validity bar of
+`example-expiring` is amber. The details of `example-app` show the X.509 data
+of its Secret and the Ingress that uses it. Then open its menu and choose
+**Force Renew**: cert-manager issues a new certificate, and a new request
+appears under **CertificateRequests**.
+
+These objects leave two things out. cert-manager creates Orders and Challenges
+only for an ACME issuer, and it approves every CertificateRequest by itself
+unless it was installed with `disableAutoApproval`, so Approve and Deny do not
+show on these requests.
+
+## Features
+
+### Lists
+
+- **Certificates**: Name, Namespace, Ready, Secret and Validity, a bar of the
+  time left with the days in words. It is green from 30 days left, amber below
+  that and red below 7. The tiles above the list count the certificates in
+  total and those Ready, Not Ready, Expiring, with less than 30 days left, and
+  Expired.
+- **CertificateRequests**: Name, Namespace, Ready, Approved or Denied, and
+  Issuer.
+- **Issuers**: Name, Namespace, Ready and Type, one of ACME, CA, SelfSigned,
+  Vault or Venafi.
+- **ClusterIssuers**: Name, Ready and Type.
+- **Orders**: Name, Namespace, State, Issuer and DNS Names.
+- **Challenges**: Name, Namespace, State, Domain, Type and Issuer.
+
+### Details
+
+Each kind has a details panel in the drawer, next to what Freelens shows for
+any custom resource: the printer columns of its CRD, its conditions and its
+events.
+
+- **Certificate**: Secret Name, Common Name, DNS Names, Issuer, Duration, Renew
+  Before, a larger validity bar, Not Before, Not After, Renewal Time and the
+  message of its Ready condition. **X.509 Details** reads `tls.crt` from the
+  Secret and shows the Subject, Issuer DN, SANs, Serial Number, Key Algorithm
+  and SHA-256 fingerprint. **Certificate Requests** links the requests it owns,
+  and **Used by Ingresses** names the Ingresses of its namespace that serve its
+  Secret.
+- **CertificateRequest**: Issuer, Duration, Is CA, Usages, when it failed, the
+  message of its Ready condition, and links to its Certificate and its Orders.
+- **Issuer** and **ClusterIssuer**: Type and the message of the Ready condition.
+- **Order**: State, Issuer, DNS Names, IP Addresses, Common Name, Duration, ACME
+  URL, Reason, when it failed, Authorizations, and links to its
+  CertificateRequest and its Challenges.
+- **Challenge**: State, Domain, marked when it is a wildcard, Type, Issuer,
+  Presented, Processing, Token, Authorization URL and Reason.
+
+### Write actions
+
+Every action on an existing object, except Edit YAML, asks first:
+
+- **Force Renew**, on a Certificate, sets the `Issuing` condition of its status
+  to `True` with the reason `ManuallyTriggered`, as `cmctl renew` does, and
+  cert-manager issues a new certificate.
+- **Approve** and **Deny**, on a CertificateRequest that is not decided yet, set
+  the `Approved` or `Denied` condition of its status.
+- **Delete (cascade)**, on a Certificate, deletes it and then the Secret it
+  names.
+- **Delete (stuck)**, on an Order that is not `valid` or `ready` or a Challenge
+  that is not `valid`, deletes it, so that cert-manager tries again.
+- **Edit YAML**, on all six kinds, opens the metadata and the spec of the object
+  in an editor and saves them with an update.
+- **Create**, the + button of a list: Certificates opens a wizard of two steps,
+  the fields and then the YAML they make, which can still be edited.
+  CertificateRequests, Issuers and ClusterIssuers open an editor with a
+  template.
+
+## Limits
+
+- **The preference has no effect yet.** Preferences > Extensions > Cert Manager
+  saves **Show expired certificates**, but the Certificates page does not read
+  it, and always lists expired certificates.
+- **Edit YAML needs a page of the extension.** Its editor lives on the six list
+  pages. Chosen in a drawer opened from another page of Freelens, the item shows
+  nothing, and the editor opens when you next reach one of those pages.
+- **Related objects come from what is loaded.** The details of a Certificate, a
+  CertificateRequest or an Order list the objects they own once the page of
+  that kind has been opened in the session.
+- **A page opened before the CRDs keeps its notice.** A list page that was open
+  while cert-manager was being installed says that it is not installed until
+  you leave the page and come back.
+
+## Build from the source
+
+### Prerequisites
+
+Use [NVM](https://github.com/nvm-sh/nvm),
+[mise-en-place](https://mise.jdx.dev/), or
+[windows-nvm](https://github.com/coreybutler/nvm-windows) to install the
+Node.js version in `.nvmrc`.
+
+From the root of this repository:
+
+```sh
+nvm install
+# or
+mise install
+# or
+winget install CoreyButler.NVMforWindows
+nvm install "$(cat .nvmrc)"
+nvm use "$(cat .nvmrc)"
+```
+
+Install pnpm:
+
+```sh
+corepack install
+# or
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+# or
+winget install pnpm.pnpm
+```
+
+### Build extension
+
+```sh
 pnpm install
-
-# Build (both renderer and main entries)
 pnpm build
+```
 
-# Watch mode
-pnpm dev
+The extension is built into `dist/`. To pack it into a tarball:
 
-# Unit tests
-pnpm test:unit
-
-# Lint
-pnpm lint:check
-
-# Type check
-pnpm type:check
-
-# Pack as .tgz for local install
+```sh
 pnpm pack
 ```
 
----
+One script to bump the prerelease version, build and pack the extension for
+testing:
+
+```sh
+pnpm pack:dev
+```
+
+The tarball is placed in the current directory. Install it as described in
+[From a release tarball](#from-a-release-tarball).
+
+### Development loop
+
+Install the extension from your checkout once, as described in
+[From a directory](#from-a-directory), then run:
+
+```sh
+pnpm dev
+```
+
+It rebuilds the extension whenever a source file changes, and Freelens
+reloads the extension after each rebuild, without a restart and without
+packing. Stop it with `ctrl`+`C`.
+
+Neither `pnpm build` nor `pnpm dev` type-checks; run `pnpm type:check` for
+that. A change to `main` or `renderer` in `package.json` needs Freelens
+restarted once.
+
+To check the extension in Freelens with an AI agent, see "Checking the
+Extension in Freelens Dev" in [AGENTS.md](AGENTS.md).
+
+### Check the code
+
+```sh
+pnpm type:check
+pnpm test:unit
+pnpm lint:check
+pnpm knip:check
+```
+
+and, for the formats that Biome does not cover:
+
+```sh
+pnpm trunk:check
+```
+
+### Integration tests
+
+The integration tests drive Freelens dev, started from a
+[freelensapp/freelens](https://github.com/freelensapp/freelens) checkout,
+against a [kind](https://kind.sigs.k8s.io/) cluster. In the Freelens checkout:
+
+```sh
+pnpm dev
+```
+
+Freelens dev lists no cluster until a kubeconfig is added in Preferences >
+Kubernetes > Kubeconfig Syncs. Add one with the kind cluster, for example:
+
+```sh
+kubectl config view --minify --flatten --context kind-kind > ~/kind-kind.kubeconfig
+```
+
+Then, with the kind cluster running, in the extension repository:
+
+```sh
+pnpm build
+pnpm test:integration
+```
+
+The tests install the checkout in place, replacing any other installation of
+the extension in Freelens dev. They apply the CRDs of the six kinds from a
+cert-manager release, without the controller, and delete them at the end, and
+with them every cert-manager object on the cluster, so use a kind cluster with
+nothing worth keeping. Without Freelens dev or the cluster the tests are
+skipped.
+
+Optional variables:
+
+- `TEST_KIND_CLUSTER_NAME`: the kind cluster, `kind` by default, used
+  through the context `kind-<name>`.
+- `TEST_CERT_MANAGER_VERSION`: the cert-manager release of the CRDs, `v1.21.3`
+  by default.
+- `FREELENS_CDP_URL`: the CDP endpoint of Freelens dev,
+  `http://127.0.0.1:9223` by default.
+- `FREELENS_MAIN_LOG`: a log of the main process to check for errors, such
+  as its `lens.log`. Without it only the renderer's errors are checked.
 
 ## Documentation
 
-| File                                                                         | Purpose                                                          |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| [`docs/understanding-cert-manager.md`](docs/understanding-cert-manager.md)   | kubectl + cmctl command reference for cert-manager               |
-| [`docs/extension-development-guide.md`](docs/extension-development-guide.md) | Freelens v2 extension API — structure, contracts, build, testing |
+- [`docs/understanding-cert-manager.md`](docs/understanding-cert-manager.md):
+  the `kubectl` and `cmctl` commands for cert-manager.
+- [`docs/extension-development-guide.md`](docs/extension-development-guide.md):
+  the Freelens v2 extension API, as this extension uses it.
 
----
+## License
 
-## Contributors
+Copyright (c) 2026 Maifee Ul Asad.
 
-| Role      | Name                                                                   | Contact                                              |
-| --------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |
-| Author    | Maifee Ul Asad                                                         | [@maifeeulasad](https://github.com/maifeeulasad)     |
-| Co-Author | Claude Sonnet 4.6                                                      | noreply@anthropic.com                                |
-| Co-Author | [GitHub Copilot](https://github.com/features/copilot)                  | copilot@github.com                                   |
-| Co-Author | Qwen-3.7-Plus                                                          | qwen-coder@alibabacloud.com                          |
-| Reviewer  | Roberto Bandini ([@robertobandini](https://github.com/robertobandini)) | [@robertobandini](https://github.com/robertobandini) |
-
-The feature roadmap (Tiers 1–4) was shaped by Roberto's review in [issue #1](https://github.com/maifeeulasad/freelens-cert-manager/issues/1).
-
----
-
-## Sources
-
-- [Freelens GitHub](https://github.com/freelensapp/freelens)
-- [Freelens Example Extension](https://github.com/freelensapp/freelens-example-extension)
-- [cert-manager Docs](https://cert-manager.io/docs/)
-- [cert-manager API Reference](https://cert-manager.io/docs/reference/api-docs/)
+[MIT License](LICENSE)

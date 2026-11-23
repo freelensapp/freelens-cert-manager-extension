@@ -6,12 +6,7 @@
 import { Renderer } from "@freelensapp/extensions";
 import { Order } from "../../common/api";
 import { getCertReqSpec, getCertReqStatus } from "../../common/api/accessors";
-import {
-  certSelfLink,
-  getOwnerRef,
-  orderSelfLink,
-  ResourceLink,
-} from "../components/resource-link";
+import { certSelfLink, getOwnerRef, orderSelfLink, ResourceLink } from "../components/resource-link";
 
 import type { CertificateRequest, OrderStore } from "../../common/api";
 
@@ -50,36 +45,23 @@ export function CertificateRequestDetails({ object: cr }: Props) {
         {spec.issuerRef ? `${spec.issuerRef.kind}/${spec.issuerRef.name}` : "-"}
       </Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Duration">
-        {spec.duration ?? "-"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Duration">{spec.duration ?? "-"}</Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Is CA">
-        {spec.isCA ? "Yes" : "No"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Is CA">{spec.isCA ? "Yes" : "No"}</Renderer.Component.DrawerItem>
 
       {usages.length > 0 && (
-        <Renderer.Component.DrawerItem name="Usages">
-          {usages.join(", ")}
-        </Renderer.Component.DrawerItem>
+        <Renderer.Component.DrawerItem name="Usages">{usages.join(", ")}</Renderer.Component.DrawerItem>
       )}
 
       {status.failureTime && (
-        <Renderer.Component.DrawerItem name="Failed At">
-          {status.failureTime}
-        </Renderer.Component.DrawerItem>
+        <Renderer.Component.DrawerItem name="Failed At">{status.failureTime}</Renderer.Component.DrawerItem>
       )}
 
-      {readyMessage && (
-        <Renderer.Component.DrawerItem name="Message">{readyMessage}</Renderer.Component.DrawerItem>
-      )}
+      {readyMessage && <Renderer.Component.DrawerItem name="Message">{readyMessage}</Renderer.Component.DrawerItem>}
 
       {parentCert && (
         <Renderer.Component.DrawerItem name="Certificate">
-          <ResourceLink
-            label={parentCert.name}
-            selfLink={certSelfLink(cr.getNs() ?? "", parentCert.name)}
-          />
+          <ResourceLink label={parentCert.name} selfLink={certSelfLink(cr.getNs() ?? "", parentCert.name)} />
         </Renderer.Component.DrawerItem>
       )}
 

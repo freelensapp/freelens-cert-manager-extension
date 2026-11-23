@@ -19,15 +19,11 @@ export function ClusterIssuerDetails({ object: issuer }: Props) {
   return (
     <>
       <Renderer.Component.DrawerTitle>ClusterIssuer Details</Renderer.Component.DrawerTitle>
-      <Renderer.Component.DrawerItem name="Type">
-        {getClusterIssuerType(issuer)}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Type">{getClusterIssuerType(issuer)}</Renderer.Component.DrawerItem>
 
       <Renderer.Component.DrawerItem name="Scope">Cluster-wide</Renderer.Component.DrawerItem>
 
-      {readyMessage && (
-        <Renderer.Component.DrawerItem name="Message">{readyMessage}</Renderer.Component.DrawerItem>
-      )}
+      {readyMessage && <Renderer.Component.DrawerItem name="Message">{readyMessage}</Renderer.Component.DrawerItem>}
     </>
   );
 }

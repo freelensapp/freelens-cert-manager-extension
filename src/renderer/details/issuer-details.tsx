@@ -19,13 +19,9 @@ export function IssuerDetails({ object: issuer }: Props) {
   return (
     <>
       <Renderer.Component.DrawerTitle>Issuer Details</Renderer.Component.DrawerTitle>
-      <Renderer.Component.DrawerItem name="Type">
-        {getIssuerType(issuer)}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Type">{getIssuerType(issuer)}</Renderer.Component.DrawerItem>
 
-      {readyMessage && (
-        <Renderer.Component.DrawerItem name="Message">{readyMessage}</Renderer.Component.DrawerItem>
-      )}
+      {readyMessage && <Renderer.Component.DrawerItem name="Message">{readyMessage}</Renderer.Component.DrawerItem>}
     </>
   );
 }

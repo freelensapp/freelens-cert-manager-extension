@@ -81,9 +81,7 @@ export function YamlEditorDialog({ isOpen, title, value, onChange, onClose, onSa
           />
         </div>
 
-        {error && (
-          <div style={{ color: "#f55", fontSize: "0.85rem", padding: "4px 8px" }}>{error}</div>
-        )}
+        {error && <div style={{ color: "#f55", fontSize: "0.85rem", padding: "4px 8px" }}>{error}</div>}
 
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
           <button

@@ -19,9 +19,7 @@ export function ChallengeDetails({ object: challenge }: Props) {
   return (
     <>
       <Renderer.Component.DrawerTitle>Challenge Details</Renderer.Component.DrawerTitle>
-      <Renderer.Component.DrawerItem name="State">
-        {acmeStateLabel(status.state)}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="State">{acmeStateLabel(status.state)}</Renderer.Component.DrawerItem>
 
       <Renderer.Component.DrawerItem name="Domain">
         {spec.dnsName ?? "-"}
@@ -42,19 +40,13 @@ export function ChallengeDetails({ object: challenge }: Props) {
         {status.processing === true ? "Yes" : status.processing === false ? "No" : "-"}
       </Renderer.Component.DrawerItem>
 
-      {spec.token && (
-        <Renderer.Component.DrawerItem name="Token">{spec.token}</Renderer.Component.DrawerItem>
-      )}
+      {spec.token && <Renderer.Component.DrawerItem name="Token">{spec.token}</Renderer.Component.DrawerItem>}
 
       {spec.authorizationURL && (
-        <Renderer.Component.DrawerItem name="Authorization URL">
-          {spec.authorizationURL}
-        </Renderer.Component.DrawerItem>
+        <Renderer.Component.DrawerItem name="Authorization URL">{spec.authorizationURL}</Renderer.Component.DrawerItem>
       )}
 
-      {status.reason && (
-        <Renderer.Component.DrawerItem name="Reason">{status.reason}</Renderer.Component.DrawerItem>
-      )}
+      {status.reason && <Renderer.Component.DrawerItem name="Reason">{status.reason}</Renderer.Component.DrawerItem>}
     </>
   );
 }

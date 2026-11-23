@@ -83,11 +83,7 @@ export function CertificatesPage() {
           addTooltip: "Create Certificate",
         }}
       />
-      <CertificateWizardDialog
-        isOpen={wizardOpen}
-        onClose={() => setWizardOpen(false)}
-        onSubmit={handleCreate}
-      />
+      <CertificateWizardDialog isOpen={wizardOpen} onClose={() => setWizardOpen(false)} onSubmit={handleCreate} />
       <YamlEditorDialogHost />
     </>
   );

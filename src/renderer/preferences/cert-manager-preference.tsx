@@ -24,9 +24,5 @@ export const CertManagerPreferenceInput = observer(function CertManagerPreferenc
 });
 
 export function CertManagerPreferenceHint() {
-  return (
-    <small>
-      When enabled, expired certificates remain visible in the list instead of being filtered out.
-    </small>
-  );
+  return <small>When enabled, expired certificates remain visible in the list instead of being filtered out.</small>;
 }

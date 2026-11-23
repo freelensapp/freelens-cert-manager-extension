@@ -97,12 +97,7 @@ function Field({
   return (
     <label style={labelStyle}>
       {label}
-      <input
-        style={inputStyle}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-      />
+      <input style={inputStyle} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
       {hint && <span style={{ fontSize: "0.75rem", opacity: 0.55 }}>{hint}</span>}
     </label>
   );
@@ -199,9 +194,7 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
             <h2 style={{ margin: 0, fontSize: "1.05rem" }}>
               {step === 1 ? "Create Certificate — Details" : "Create Certificate — Review YAML"}
             </h2>
-            <div style={{ fontSize: "0.75rem", opacity: 0.5, marginTop: "2px" }}>
-              Step {step} of 2
-            </div>
+            <div style={{ fontSize: "0.75rem", opacity: 0.5, marginTop: "2px" }}>Step {step} of 2</div>
           </div>
           <button
             type="button"
@@ -221,17 +214,8 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
         {/* Step 1 — form */}
         {step === 1 && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-            <Field
-              label="Name *"
-              value={fields.name}
-              onChange={(v) => set("name", v)}
-              placeholder="my-certificate"
-            />
-            <Field
-              label="Namespace *"
-              value={fields.namespace}
-              onChange={(v) => set("namespace", v)}
-            />
+            <Field label="Name *" value={fields.name} onChange={(v) => set("name", v)} placeholder="my-certificate" />
+            <Field label="Namespace *" value={fields.namespace} onChange={(v) => set("namespace", v)} />
             <Field
               label="Secret Name"
               value={fields.secretName}
@@ -314,9 +298,7 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
           </div>
         )}
 
-        {error && (
-          <div style={{ color: "#f55", fontSize: "0.84rem", padding: "2px 4px" }}>{error}</div>
-        )}
+        {error && <div style={{ color: "#f55", fontSize: "0.84rem", padding: "2px 4px" }}>{error}</div>}
 
         {/* Footer buttons */}
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>

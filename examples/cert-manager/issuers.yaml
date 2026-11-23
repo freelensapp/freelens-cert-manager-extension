@@ -1,0 +1,31 @@
+# A self-signed ClusterIssuer, the CA certificate it signs, and the Issuer that
+# signs with that CA.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: example-selfsigned
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: example-ca
+spec:
+  isCA: true
+  commonName: example-ca
+  secretName: example-ca
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: example-selfsigned
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: example-ca
+spec:
+  ca:
+    secretName: example-ca

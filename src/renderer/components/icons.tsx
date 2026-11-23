@@ -28,13 +28,7 @@ export function IconCertManager() {
   return icon(
     <>
       <rect x="3" y="7" width="10" height="8" rx="1.5" fill="#64b5f6" />
-      <path
-        d="M5 7V5a3 3 0 0 1 6 0v2"
-        stroke="#64b5f6"
-        strokeWidth="1.8"
-        fill="none"
-        strokeLinecap="round"
-      />
+      <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#64b5f6" strokeWidth="1.8" fill="none" strokeLinecap="round" />
       <circle cx="8" cy="11" r="1.2" fill="#fff" />
     </>,
   );
@@ -44,11 +38,7 @@ export function IconCertManager() {
 export function IconCertificate() {
   return icon(
     <>
-      <path
-        d="M8 1 L14 3.5 V8 C14 11.5 11 13.8 8 15 C5 13.8 2 11.5 2 8 V3.5 Z"
-        fill="#66bb6a"
-        opacity="0.85"
-      />
+      <path d="M8 1 L14 3.5 V8 C14 11.5 11 13.8 8 15 C5 13.8 2 11.5 2 8 V3.5 Z" fill="#66bb6a" opacity="0.85" />
       <polyline
         points="5,8 7,10.5 11,6"
         stroke="#fff"
@@ -112,13 +102,7 @@ export function IconCertificateRequest() {
 export function IconOrder() {
   return icon(
     <>
-      <path
-        d="M13 8 A5 5 0 1 1 10.5 3.5"
-        stroke="#26a69a"
-        strokeWidth="1.8"
-        fill="none"
-        strokeLinecap="round"
-      />
+      <path d="M13 8 A5 5 0 1 1 10.5 3.5" stroke="#26a69a" strokeWidth="1.8" fill="none" strokeLinecap="round" />
       <polyline
         points="10,1 11,4 14,3"
         stroke="#26a69a"

@@ -1,29 +1,39 @@
-/**
- * Author: Maifee Ul Asad <maifeeulasad@gmail.com>
- * Co-Author: Claude Sonnet 4.6 <noreply@anthropic.com>
- *
- * Source: https://github.com/freelensapp/freelens-example-extension/blob/main/vitest.config.ts
- */
-
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 import { standardDecorators } from "./build/vite-plugin-standard-decorators.mjs";
 
 export default defineConfig({
-  plugins: [standardDecorators(), react()],
+  plugins: [
+    // Lowers the standard decorators (`@observable accessor`) before Oxc, as in
+    // the build; Oxc passes them through and Node cannot run them.
+    standardDecorators(),
+    // Transforms JSX/TSX the same way the build does, so component tests
+    // (e.g. `error-page.test.tsx`) render correctly.
+    react(),
+  ],
   test: {
+    // Default to a Node environment. Tests that render React components opt into
+    // jsdom per-file with a `// @vitest-environment jsdom` comment at the top.
     environment: "node",
+    // Tests import describe, it, expect, vi and the hooks from "vitest"; no
+    // tsconfig declares them as globals. `globals` is on at runtime because
+    // React Testing Library registers its automatic `afterEach(cleanup)` only
+    // when `afterEach` exists as a global.
     globals: true,
-    exclude: ["integration/**", "node_modules/**", "dist/**", ".study/**"],
+    exclude: ["integration/**", "node_modules/**", "dist/**"],
+    // The same files that `src/tsconfig.json` type-checks and Biome lets
+    // import "vitest".
     include: ["src/**/*.test.{ts,tsx}"],
     passWithNoTests: true,
     alias: {
-      // The real package reads globalThis.FreelensExtensionApi which doesn't
-      // exist in a Vitest process. Redirect to the test stub instead.
-      "@freelensapp/extensions": fileURLToPath(
-        new URL("./test/freelens-extensions.ts", import.meta.url),
-      ),
+      // The host provides `@freelensapp/extensions` on
+      // `globalThis.FreelensExtensionApi`, and the package is a shim that reads
+      // that global when it is imported, so the real package throws in a test.
+      // Tests import a small stub instead - see `test/freelens-extensions.ts`.
+      // The other host modules (react, mobx, ...) resolve to the
+      // devDependencies, which are pinned to the host's versions.
+      "@freelensapp/extensions": fileURLToPath(new URL("./test/freelens-extensions.ts", import.meta.url)),
     },
   },
 });

@@ -10,8 +10,7 @@ export interface CertManagerPreferencesModel {
   showExpiredCerts: boolean;
 }
 
-export class CertManagerPreferencesStore extends Common.Store
-  .ExtensionStore<CertManagerPreferencesModel> {
+export class CertManagerPreferencesStore extends Common.Store.ExtensionStore<CertManagerPreferencesModel> {
   @observable accessor showExpiredCerts = false;
 
   constructor() {

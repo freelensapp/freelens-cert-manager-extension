@@ -1,27 +1,30 @@
-# Author: Maifee Ul Asad <maifeeulasad@gmail.com>
-# Co-Author: Claude Sonnet 4.6 <noreply@anthropic.com>
-#
-# Source: https://github.com/freelensapp/freelens-example-extension/blob/main/pnpm-workspace.yaml
-
-# Allow electron and @parcel/watcher to run build scripts; set esbuild to false
-# because the host-modules vite plugin loads esbuild at build time, not via
-# a native add-on, so its postinstall script is not needed.
 allowBuilds:
-  "@parcel/watcher": true
+  '@parcel/watcher': true
   electron: true
   esbuild: false
 
 engineStrict: true
 
-# Bypass the 1-day minimum release age for packages adopted together with a
-# Freelens release (they are pinned exactly, so the age gate only blocks new
-# installs, not updates).
+# pnpm holds back any version younger than minimumReleaseAge (1 day by
+# default). @freelensapp/extensions is adopted on the day of a Freelens
+# release, together with the stack it was built with. The other entries are
+# the ones Freelens has, one exact version each, for security fixes that
+# cannot wait. Remove such an entry once that version is older than the
+# policy: the exclusion is then a no-op.
 minimumReleaseAgeExclude:
-  - "@freelensapp/extensions"
+  - '@freelensapp/extensions'
+  # Node 24.22.1, the fix of CVE-2026-111497.
   - electron@44.10.0
+
+overrides:
+  # monaco-editor pins dompurify 3.4.15, which GHSA-cg2g-xh64-v4q7 affects. The
+  # same override as in Freelens, on the version of its catalog. monaco-editor
+  # is here for its types only: the bundle takes the editor from the host.
+  monaco-editor>dompurify: 3.4.18
 
 shellEmulator: true
 
-# Fail the install, not just warn, when a shared library is outside the peer
-# range declared by @freelensapp/extensions.
+# Fail the install, instead of printing one warning line, when a library the
+# extension shares with the host is outside the peer range of
+# @freelensapp/extensions.
 strictPeerDependencies: true

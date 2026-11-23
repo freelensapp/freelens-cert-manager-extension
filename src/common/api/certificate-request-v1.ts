@@ -66,9 +66,7 @@ export class CertificateRequest extends Renderer.K8sApi.LensExtensionKubeObject<
   }
 
   get isApproved(): boolean {
-    return (this.status?.conditions ?? []).some(
-      (c) => c.type === "Approved" && c.status === "True",
-    );
+    return (this.status?.conditions ?? []).some((c) => c.type === "Approved" && c.status === "True");
   }
 
   get failureTime(): string | undefined {
