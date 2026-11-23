@@ -6,19 +6,10 @@ import "reflect-metadata";
  */
 
 import { Renderer } from "@freelensapp/extensions";
-import {
-  Certificate,
-  CertificateRequest,
-  Challenge,
-  ClusterIssuer,
-  Issuer,
-  Order,
-} from "../common/api";
+import { Certificate, CertificateRequest, Challenge, ClusterIssuer, Issuer, Order } from "../common/api";
 
-type DetailsComponent =
-  Renderer.LensExtension["kubeObjectDetailItems"][number]["components"]["Details"];
-type MenuItemComponent =
-  Renderer.LensExtension["kubeObjectMenuItems"][number]["components"]["MenuItem"];
+type DetailsComponent = Renderer.LensExtension["kubeObjectDetailItems"][number]["components"]["Details"];
+type MenuItemComponent = Renderer.LensExtension["kubeObjectMenuItems"][number]["components"]["MenuItem"];
 
 import { CertManagerPreferencesStore } from "../common/store";
 import { ErrorBoundary } from "./components/error-boundary";
@@ -55,10 +46,7 @@ import { ChallengesPage } from "./pages/challenges-page";
 import { ClusterIssuersPage } from "./pages/cluster-issuers-page";
 import { IssuersPage } from "./pages/issuers-page";
 import { OrdersPage } from "./pages/orders-page";
-import {
-  CertManagerPreferenceHint,
-  CertManagerPreferenceInput,
-} from "./preferences/cert-manager-preference";
+import { CertManagerPreferenceHint, CertManagerPreferenceInput } from "./preferences/cert-manager-preference";
 
 export default class CertManagerRenderer extends Renderer.LensExtension {
   async onActivate() {

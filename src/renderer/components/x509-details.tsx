@@ -44,8 +44,7 @@ async function parseSecret(secretName: string, namespace: string): Promise<X509I
     const alg = cert.publicKey.algorithm;
     let keyAlgorithm = alg.name;
     if ("namedCurve" in alg) keyAlgorithm = `${alg.name} (${(alg as EcKeyAlgorithm).namedCurve})`;
-    else if ("modulusLength" in alg)
-      keyAlgorithm = `${alg.name}-${(alg as RsaKeyAlgorithm).modulusLength}`;
+    else if ("modulusLength" in alg) keyAlgorithm = `${alg.name}-${(alg as RsaKeyAlgorithm).modulusLength}`;
 
     // SANs
     const sanExt = cert.getExtension("2.5.29.17");
@@ -99,42 +98,26 @@ export function X509Details({ secretName, namespace }: Props) {
 
   if (!secretName) return null;
   if (loading) {
-    return (
-      <Renderer.Component.DrawerItem name="X.509 Details">Loading…</Renderer.Component.DrawerItem>
-    );
+    return <Renderer.Component.DrawerItem name="X.509 Details">Loading…</Renderer.Component.DrawerItem>;
   }
   if (!info) return null;
 
   return (
     <Renderer.Component.DrawerItem name="X.509 Details" labelsOnly>
-      {info.subject && (
-        <Renderer.Component.DrawerItem name="Subject">{info.subject}</Renderer.Component.DrawerItem>
-      )}
+      {info.subject && <Renderer.Component.DrawerItem name="Subject">{info.subject}</Renderer.Component.DrawerItem>}
 
-      {info.issuerDN && (
-        <Renderer.Component.DrawerItem name="Issuer DN">
-          {info.issuerDN}
-        </Renderer.Component.DrawerItem>
-      )}
+      {info.issuerDN && <Renderer.Component.DrawerItem name="Issuer DN">{info.issuerDN}</Renderer.Component.DrawerItem>}
 
       {info.sans.length > 0 && (
-        <Renderer.Component.DrawerItem name="SANs">
-          {info.sans.join(", ")}
-        </Renderer.Component.DrawerItem>
+        <Renderer.Component.DrawerItem name="SANs">{info.sans.join(", ")}</Renderer.Component.DrawerItem>
       )}
 
-      <Renderer.Component.DrawerItem name="Serial Number">
-        {info.serialNumber}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Serial Number">{info.serialNumber}</Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Key Algorithm">
-        {info.keyAlgorithm}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Key Algorithm">{info.keyAlgorithm}</Renderer.Component.DrawerItem>
 
       <Renderer.Component.DrawerItem name="SHA-256 Fingerprint">
-        <span style={{ fontFamily: "monospace", fontSize: "0.8em", wordBreak: "break-all" }}>
-          {info.fingerprint}
-        </span>
+        <span style={{ fontFamily: "monospace", fontSize: "0.8em", wordBreak: "break-all" }}>{info.fingerprint}</span>
       </Renderer.Component.DrawerItem>
     </Renderer.Component.DrawerItem>
   );

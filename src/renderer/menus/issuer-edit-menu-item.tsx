@@ -13,7 +13,6 @@ interface Props {
 }
 
 export function IssuerEditMenuItem({ object }: Props) {
-  const api = (Issuer.getStore() as IssuerStore)
-    .api as unknown as Renderer.K8sApi.KubeApi<Renderer.K8sApi.KubeObject>;
+  const api = (Issuer.getStore() as IssuerStore).api as unknown as Renderer.K8sApi.KubeApi<Renderer.K8sApi.KubeObject>;
   return <ResourceEditYamlMenuItem object={object} api={api} />;
 }

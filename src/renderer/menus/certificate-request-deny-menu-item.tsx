@@ -39,9 +39,9 @@ export function CertificateRequestDenyMenuItem({ object: cr }: Props) {
 
           // biome-ignore lint/suspicious/noExplicitAny: raw KubeObject property access
           const rawCr = cr as any;
-          const existingConditions = (
-            (rawCr.status?.conditions ?? []) as Array<{ type: string }>
-          ).filter((c: { type: string }) => c.type !== "Approved" && c.type !== "Denied");
+          const existingConditions = ((rawCr.status?.conditions ?? []) as Array<{ type: string }>).filter(
+            (c: { type: string }) => c.type !== "Approved" && c.type !== "Denied",
+          );
 
           const body = {
             apiVersion: "cert-manager.io/v1",
@@ -63,10 +63,7 @@ export function CertificateRequestDenyMenuItem({ object: cr }: Props) {
             },
           };
 
-          await api.put(
-            `/apis/cert-manager.io/v1/namespaces/${ns}/certificaterequests/${name}/status`,
-            { data: body },
-          );
+          await api.put(`/apis/cert-manager.io/v1/namespaces/${ns}/certificaterequests/${name}/status`, { data: body });
         } catch (err) {
           Renderer.Component.Notifications.error(
             `Failed to deny CertificateRequest "${ns}/${name}": ${err instanceof Error ? err.message : String(err)}`,

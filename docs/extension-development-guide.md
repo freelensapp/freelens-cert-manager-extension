@@ -78,6 +78,7 @@ my-extension/
 ```
 
 **Rules:**
+
 - `engines.freelens: "^2.0.0"` is **mandatory** — without it the host refuses the extension at discovery.
 - `@freelensapp/extensions` goes in `devDependencies` only (it's a compile-time shim).
 - No other `@freelensapp/*` package may be listed as a dependency.
@@ -272,8 +273,7 @@ export class CertManagerPreferencesStore extends Common.Store.ExtensionStore<{
   }
 }
 
-export const certManagerPreferencesStore =
-  CertManagerPreferencesStore.getInstance<CertManagerPreferencesStore>();
+export const certManagerPreferencesStore = CertManagerPreferencesStore.getInstance<CertManagerPreferencesStore>();
 ```
 
 ---
@@ -296,6 +296,7 @@ describe("CertManagerPreferencesStore", () => {
 ```
 
 Run with:
+
 ```sh
 pnpm test:unit          # vitest run
 pnpm test:integration   # vitest run --config vitest.integration.config.ts

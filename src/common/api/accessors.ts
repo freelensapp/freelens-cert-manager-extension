@@ -120,15 +120,11 @@ export function isCertReqReady(obj: AnyObj): boolean {
 }
 
 export function isCertReqDenied(obj: AnyObj): boolean {
-  return (getCertReqStatus(obj).conditions ?? []).some(
-    (c) => c.type === "Denied" && c.status === "True",
-  );
+  return (getCertReqStatus(obj).conditions ?? []).some((c) => c.type === "Denied" && c.status === "True");
 }
 
 export function isCertReqApproved(obj: AnyObj): boolean {
-  return (getCertReqStatus(obj).conditions ?? []).some(
-    (c) => c.type === "Approved" && c.status === "True",
-  );
+  return (getCertReqStatus(obj).conditions ?? []).some((c) => c.type === "Approved" && c.status === "True");
 }
 
 // ── Shared ACME helpers ───────────────────────────────────────────────────────

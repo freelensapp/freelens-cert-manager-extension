@@ -8,14 +8,7 @@
 
 import { Renderer } from "@freelensapp/extensions";
 
-export type AcmeState =
-  | "valid"
-  | "ready"
-  | "pending"
-  | "processing"
-  | "invalid"
-  | "expired"
-  | "errored";
+export type AcmeState = "valid" | "ready" | "pending" | "processing" | "invalid" | "expired" | "errored";
 
 export interface OrderSpec {
   request?: string;

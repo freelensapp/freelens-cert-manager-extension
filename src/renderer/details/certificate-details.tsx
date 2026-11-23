@@ -40,9 +40,7 @@ function getOwnedCertReqs(cert: Certificate) {
       const raw = cr as unknown as {
         metadata?: { ownerReferences?: Array<{ kind: string; name: string }> };
       };
-      return (raw.metadata?.ownerReferences ?? []).some(
-        (r) => r.kind === "Certificate" && r.name === cert.getName(),
-      );
+      return (raw.metadata?.ownerReferences ?? []).some((r) => r.kind === "Certificate" && r.name === cert.getName());
     });
   } catch {
     return [];
@@ -67,13 +65,9 @@ export function CertificateDetails({ object: cert }: Props) {
   return (
     <>
       <Renderer.Component.DrawerTitle>Certificate Details</Renderer.Component.DrawerTitle>
-      <Renderer.Component.DrawerItem name="Secret Name">
-        {spec.secretName ?? "-"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Secret Name">{spec.secretName ?? "-"}</Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Common Name">
-        {spec.commonName ?? "-"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Common Name">{spec.commonName ?? "-"}</Renderer.Component.DrawerItem>
 
       <Renderer.Component.DrawerItem name="DNS Names">
         {dnsNames.length > 0 ? dnsNames.join(", ") : "-"}
@@ -83,33 +77,21 @@ export function CertificateDetails({ object: cert }: Props) {
         {spec.issuerRef ? `${spec.issuerRef.kind}/${spec.issuerRef.name}` : "-"}
       </Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Duration">
-        {spec.duration ?? "-"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Duration">{spec.duration ?? "-"}</Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Renew Before">
-        {spec.renewBefore ?? "-"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Renew Before">{spec.renewBefore ?? "-"}</Renderer.Component.DrawerItem>
 
       <Renderer.Component.DrawerItem name="Validity">
         <ValidityBarDetail notBefore={status.notBefore} notAfter={status.notAfter} />
       </Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Not Before">
-        {status.notBefore ?? "-"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Not Before">{status.notBefore ?? "-"}</Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Not After (Expires)">
-        {status.notAfter ?? "-"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Not After (Expires)">{status.notAfter ?? "-"}</Renderer.Component.DrawerItem>
 
-      <Renderer.Component.DrawerItem name="Renewal Time">
-        {status.renewalTime ?? "-"}
-      </Renderer.Component.DrawerItem>
+      <Renderer.Component.DrawerItem name="Renewal Time">{status.renewalTime ?? "-"}</Renderer.Component.DrawerItem>
 
-      {readyMessage && (
-        <Renderer.Component.DrawerItem name="Message">{readyMessage}</Renderer.Component.DrawerItem>
-      )}
+      {readyMessage && <Renderer.Component.DrawerItem name="Message">{readyMessage}</Renderer.Component.DrawerItem>}
 
       {ownedCRs.length > 0 && (
         <Renderer.Component.DrawerItem name="Certificate Requests">

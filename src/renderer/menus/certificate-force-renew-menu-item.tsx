@@ -36,9 +36,9 @@ export function CertificateForceRenewMenuItem({ object: cert }: Props) {
 
           // biome-ignore lint/suspicious/noExplicitAny: raw KubeObject property access
           const rawCert = cert as any;
-          const existingConditions = (
-            (rawCert.status?.conditions ?? []) as Array<{ type: string }>
-          ).filter((c: { type: string }) => c.type !== "Issuing");
+          const existingConditions = ((rawCert.status?.conditions ?? []) as Array<{ type: string }>).filter(
+            (c: { type: string }) => c.type !== "Issuing",
+          );
 
           const body = {
             apiVersion: "cert-manager.io/v1",

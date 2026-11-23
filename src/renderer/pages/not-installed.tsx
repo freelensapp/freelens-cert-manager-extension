@@ -20,9 +20,7 @@ export function NotInstalled({ resource }: { resource: string }) {
       <p>
         <strong>cert-manager</strong> is not installed in this cluster.
       </p>
-      <p style={{ fontSize: "0.85rem" }}>
-        {resource} API is not registered. Install cert-manager to use this page.
-      </p>
+      <p style={{ fontSize: "0.85rem" }}>{resource} API is not registered. Install cert-manager to use this page.</p>
     </div>
   );
 }

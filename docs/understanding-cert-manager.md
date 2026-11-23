@@ -1,10 +1,12 @@
 Author:
+
 - Maifee Ul Asad
 - Qwen 3.7 Plus
 
 To work with **cert-manager** in Kubernetes, it is important to understand that cert-manager is a Kubernetes controller/operator. It does not have its own standalone database; instead, it extends the Kubernetes API using **Custom Resource Definitions (CRDs)**.
 
 Therefore, you will use two primary tools to interact with it:
+
 1. **`kubectl`**: For standard **CRUD** (Create, Read, Update, Delete) operations on cert-manager resources.
 2. **`cmctl`**: The official **cert-manager CLI** for specialized tasks like debugging, manual renewals, and inspecting certificates.
 
@@ -15,6 +17,7 @@ Here is the comprehensive documentation for all commands, arguments, and flags.
 # PART 1: `kubectl` (CRUD Operations)
 
 Cert-manager introduces several Custom Resources (CRs). The most common ones you will interact with are:
+
 -   `issuer` / `clusterissuer`: Defines _who_ can issue certificates (e.g., Let's Encrypt, Vault, SelfSigned).
 -   `certificate`: Defines _what_ certificate you want (domain names, secret name to store it in).
 -   `certificaterequest`: The actual request sent to the Issuer (usually created automatically by the `certificate` controller).
@@ -164,6 +167,7 @@ cmctl convert <filename.yaml>
 #### `cmctl` Global Arguments/Flags:
 
 These flags can be appended to almost any `cmctl` command:
+
 -   `-n <namespace>` or `--namespace=<namespace>`: Specify the namespace.
 -   `--context=<context>`: Use a specific kubeconfig context (if you have multiple clusters).
 -   `--kubeconfig=<path>`: Path to a specific kubeconfig file.

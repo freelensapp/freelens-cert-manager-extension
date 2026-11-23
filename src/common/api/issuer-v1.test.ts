@@ -8,10 +8,7 @@ import { Issuer } from "./issuer-v1";
 
 type IssuerCondition = { type: string; status: string; message?: string };
 
-function makeIssuer(
-  spec: Record<string, unknown> = {},
-  statusConditions: IssuerCondition[] = [],
-): Issuer {
+function makeIssuer(spec: Record<string, unknown> = {}, statusConditions: IssuerCondition[] = []): Issuer {
   return new Issuer({
     apiVersion: "cert-manager.io/v1",
     kind: "Issuer",
