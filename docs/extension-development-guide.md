@@ -61,11 +61,11 @@ my-extension/
   "renderer": "dist/renderer.js",
   "engines": {
     "node": ">= 24.0.0",
-    "freelens": "^2.0.0"
+    "freelens": "^2.1.0"
   },
   "files": ["dist/**/*"],
   "devDependencies": {
-    "@freelensapp/extensions": "2.0.0",
+    "@freelensapp/extensions": "2.1.0",
     "electron": "44.x",
     "react": "19.x",
     "react-dom": "19.x",
@@ -79,7 +79,7 @@ my-extension/
 
 **Rules:**
 
-- `engines.freelens: "^2.0.0"` is **mandatory** — without it the host refuses the extension at discovery.
+- `engines.freelens: "^2.1.0"` is **mandatory** — without it the host refuses the extension at discovery.
 - `@freelensapp/extensions` goes in `devDependencies` only (it's a compile-time shim).
 - No other `@freelensapp/*` package may be listed as a dependency.
 - Host-provided libraries (`react`, `react-dom`, `mobx`, `mobx-react`, `monaco-editor`) go in `devDependencies` — they must **not** be bundled.
@@ -328,7 +328,7 @@ Playwright, against a [kind](https://kind.sigs.k8s.io/) cluster. See
 
 ## Quick Checklist for a New Extension
 
-- [ ] `engines.freelens: "^2.0.0"` in `package.json`
+- [ ] `engines.freelens: "^2.1.0"` in `package.json`
 - [ ] `"type": "module"` set
 - [ ] `@freelensapp/extensions` in `devDependencies` only
 - [ ] Host singletons in `devDependencies` (not bundled)

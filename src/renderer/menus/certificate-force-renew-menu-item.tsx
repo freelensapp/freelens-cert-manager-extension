@@ -12,15 +12,13 @@
  * Ref: cert-manager pkg/ctl/renew.go — UpdateStatus path
  */
 
-import { Renderer } from "@freelensapp/extensions";
+import { type Common, Renderer } from "@freelensapp/extensions";
 
 import type { Certificate } from "../../common/api";
 
-interface Props {
-  object: Certificate;
-}
+type Props = Common.Types.KubeObjectMenuItemProps<Certificate>;
 
-export function CertificateForceRenewMenuItem({ object: cert }: Props) {
+export function CertificateForceRenewMenuItem({ object: cert, toolbar }: Props) {
   function handleForceRenew() {
     const ns = cert.getNs();
     const name = cert.getName();
@@ -72,8 +70,9 @@ export function CertificateForceRenewMenuItem({ object: cert }: Props) {
   }
 
   return (
-    <Renderer.Component.MenuItem icon="autorenew" onClick={handleForceRenew}>
-      Force Renew
+    <Renderer.Component.MenuItem onClick={handleForceRenew}>
+      <Renderer.Component.Icon material="autorenew" interactive={toolbar} title="Force Renew" />
+      <span className="title">Force Renew</span>
     </Renderer.Component.MenuItem>
   );
 }

@@ -6,14 +6,12 @@
 import { ClusterIssuer, type ClusterIssuerStore } from "../../common/api";
 import { ResourceEditYamlMenuItem } from "./resource-edit-yaml-menu-item";
 
-import type { Renderer } from "@freelensapp/extensions";
+import type { Common, Renderer } from "@freelensapp/extensions";
 
-interface Props {
-  object: ClusterIssuer;
-}
+type Props = Common.Types.KubeObjectMenuItemProps<ClusterIssuer>;
 
-export function ClusterIssuerEditMenuItem({ object }: Props) {
+export function ClusterIssuerEditMenuItem({ object, toolbar }: Props) {
   const api = (ClusterIssuer.getStore() as ClusterIssuerStore)
     .api as unknown as Renderer.K8sApi.KubeApi<Renderer.K8sApi.KubeObject>;
-  return <ResourceEditYamlMenuItem object={object} api={api} />;
+  return <ResourceEditYamlMenuItem object={object} api={api} toolbar={toolbar} />;
 }

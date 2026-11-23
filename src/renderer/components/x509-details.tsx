@@ -8,8 +8,8 @@
  */
 
 import { Renderer } from "@freelensapp/extensions";
-import { X509Certificate } from "@peculiar/x509";
-import { useEffect, useState } from "react";
+import { SubjectAlternativeNameExtension, X509Certificate } from "@peculiar/x509";
+import { createElement, useEffect, useState } from "react";
 
 interface X509Info {
   subject: string;
@@ -46,17 +46,9 @@ async function parseSecret(secretName: string, namespace: string): Promise<X509I
     if ("namedCurve" in alg) keyAlgorithm = `${alg.name} (${(alg as EcKeyAlgorithm).namedCurve})`;
     else if ("modulusLength" in alg) keyAlgorithm = `${alg.name}-${(alg as RsaKeyAlgorithm).modulusLength}`;
 
-    // SANs
-    const sanExt = cert.getExtension("2.5.29.17");
-    const sans: string[] = [];
-    if (sanExt) {
-      const sanStr = sanExt.toString();
-      // Parse "DNS:example.com, IP:1.2.3.4" style
-      for (const part of sanStr.split(",")) {
-        const trimmed = part.trim();
-        if (trimmed) sans.push(trimmed);
-      }
-    }
+    // SANs, as "DNS:example.com", "IP:1.2.3.4"
+    const sanExt = cert.getExtension(SubjectAlternativeNameExtension);
+    const sans = (sanExt?.names.items ?? []).map((name) => `${name.type.toUpperCase()}:${name.value}`);
 
     // SHA-256 fingerprint — cert.rawData is the DER-encoded certificate bytes
     const hashBuf = await crypto.subtle.digest("SHA-256", cert.rawData);
@@ -77,6 +69,13 @@ async function parseSecret(secretName: string, namespace: string): Promise<X509I
   } catch {
     return null;
   }
+}
+
+/** The fingerprint, which may wrap only between two bytes: `<wbr>` adds nothing to the copied text. */
+function Fingerprint({ value }: { value: string }) {
+  const parts = value.split(":").flatMap((byte, i) => (i === 0 ? [byte] : [":", createElement("wbr"), byte]));
+
+  return createElement("span", { style: { fontFamily: "monospace", fontSize: "0.8em" } }, ...parts);
 }
 
 interface Props {
@@ -103,7 +102,8 @@ export function X509Details({ secretName, namespace }: Props) {
   if (!info) return null;
 
   return (
-    <Renderer.Component.DrawerItem name="X.509 Details" labelsOnly>
+    <>
+      <Renderer.Component.DrawerTitle>X.509 Details</Renderer.Component.DrawerTitle>
       {info.subject && <Renderer.Component.DrawerItem name="Subject">{info.subject}</Renderer.Component.DrawerItem>}
 
       {info.issuerDN && <Renderer.Component.DrawerItem name="Issuer DN">{info.issuerDN}</Renderer.Component.DrawerItem>}
@@ -117,8 +117,8 @@ export function X509Details({ secretName, namespace }: Props) {
       <Renderer.Component.DrawerItem name="Key Algorithm">{info.keyAlgorithm}</Renderer.Component.DrawerItem>
 
       <Renderer.Component.DrawerItem name="SHA-256 Fingerprint">
-        <span style={{ fontFamily: "monospace", fontSize: "0.8em", wordBreak: "break-all" }}>{info.fingerprint}</span>
+        <Fingerprint value={info.fingerprint} />
       </Renderer.Component.DrawerItem>
-    </Renderer.Component.DrawerItem>
+    </>
   );
 }

@@ -8,17 +8,15 @@
  * Deleting a stuck Challenge causes the parent Order to retry.
  */
 
-import { Renderer } from "@freelensapp/extensions";
+import { type Common, Renderer } from "@freelensapp/extensions";
 import { Challenge } from "../../common/api";
 import { acmeStateLabel, getChallengeStatus } from "../../common/api/accessors";
 
 import type { ChallengeStore } from "../../common/api";
 
-interface Props {
-  object: Challenge;
-}
+type Props = Common.Types.KubeObjectMenuItemProps<Challenge>;
 
-export function ChallengeDeleteStuckMenuItem({ object: challenge }: Props) {
+export function ChallengeDeleteStuckMenuItem({ object: challenge, toolbar }: Props) {
   const state = getChallengeStatus(challenge).state;
   const isStuck = state && state !== "valid";
 
@@ -50,8 +48,9 @@ export function ChallengeDeleteStuckMenuItem({ object: challenge }: Props) {
   }
 
   return (
-    <Renderer.Component.MenuItem icon="delete_forever" onClick={handleDelete}>
-      Delete (stuck)
+    <Renderer.Component.MenuItem onClick={handleDelete}>
+      <Renderer.Component.Icon material="delete_forever" interactive={toolbar} title="Delete (stuck)" />
+      <span className="title">Delete (stuck)</span>
     </Renderer.Component.MenuItem>
   );
 }

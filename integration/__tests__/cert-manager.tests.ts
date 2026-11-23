@@ -17,9 +17,11 @@ import {
   clickMenuItem,
   confirmDialog,
   connectApp,
+  detailsDrawer,
   detailsItemValue,
   disconnectKindCluster,
   expectDetailsApiVersion,
+  expectToolbarIconOnly,
   installExtension,
   openDetails,
   openKindCluster,
@@ -166,6 +168,64 @@ describe.skipIf(!(await appReady({ cluster: true })))(
       }
 
       await frame.locator("body").press("Escape");
+    });
+
+    it.each(kindViews)(
+      "shows the extension's items as icons in the details toolbar of the $kind test object",
+      async ({ pageId, detailsItem, menuItems }) => {
+        const row = await openListPage(frame, pageId);
+
+        await openDetails(frame, row, detailsItem);
+
+        for (const title of menuItems) {
+          await expectToolbarIconOnly(frame, title);
+        }
+      },
+    );
+
+    it("shows the X.509 data of the Certificate on rows of their own", async () => {
+      const row = await openListPage(frame, "cert-manager-certificates");
+
+      await openDetails(frame, row, "Subject");
+
+      // Each level of drawer items gives a value what is left of the width, and
+      // a field nested in another wraps in the middle of its words.
+      const nested = detailsDrawer(frame)
+        .locator(".DrawerItem .DrawerItem")
+        .filter({ has: frame.locator(".name").getByText("Subject", { exact: true }) });
+
+      expect(await nested.count()).toBe(0);
+      expect(await detailsItemValue(frame, "Subject").textContent()).toBe("CN=test.example.com");
+      expect(await detailsItemValue(frame, "SANs").textContent()).toBe("DNS:test.example.com");
+
+      // The fingerprint may wrap only between two bytes.
+      const fingerprint = detailsItemValue(frame, "SHA-256 Fingerprint");
+
+      expect(await fingerprint.textContent()).toMatch(/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/);
+      expect(await fingerprint.locator("wbr").count()).toBe(31);
+    });
+
+    it("keeps the list and its add button in view under the summary of the Certificates page", async () => {
+      await openListPage(frame, "cert-manager-certificates");
+
+      // The main area of the host clips what overflows it, so a page taller than
+      // the area hides the bottom of the list and the add button, with no way to
+      // scroll to them.
+      const main = frame.locator("main");
+      const { clientHeight, scrollHeight } = await main.evaluate((el) => ({
+        clientHeight: el.clientHeight,
+        scrollHeight: el.scrollHeight,
+      }));
+
+      expect(scrollHeight).toBeLessThanOrEqual(clientHeight);
+
+      const inView = await frame.locator(".AddRemoveButtons .add-button").evaluate((button) => {
+        const { left, top, width, height } = button.getBoundingClientRect();
+
+        return button.contains(document.elementFromPoint(left + width / 2, top + height / 2));
+      });
+
+      expect(inView).toBe(true);
     });
 
     it("asks for a new issuance of the Certificate, after asking", async () => {

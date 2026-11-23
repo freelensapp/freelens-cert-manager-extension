@@ -41,6 +41,10 @@ export function YamlEditorDialog({ isOpen, title, value, onChange, onClose, onSa
           maxWidth: "90vw",
           gap: "12px",
           padding: "16px",
+          background: "var(--dialogBackground)",
+          // The controls below take --textColorPrimary: --dialogTextColor is too faint on the default light theme.
+          color: "var(--dialogTextColor)",
+          borderRadius: "4px",
         }}
       >
         <div
@@ -59,7 +63,7 @@ export function YamlEditorDialog({ isOpen, title, value, onChange, onClose, onSa
               border: "none",
               cursor: "pointer",
               fontSize: "1.2rem",
-              opacity: 0.7,
+              color: "var(--textColorPrimary)",
             }}
           >
             ✕
@@ -69,7 +73,7 @@ export function YamlEditorDialog({ isOpen, title, value, onChange, onClose, onSa
         <div
           style={{
             height: "450px",
-            border: "1px solid rgba(255,255,255,0.1)",
+            border: "1px solid var(--halfGray)",
             borderRadius: "4px",
           }}
         >
@@ -81,7 +85,19 @@ export function YamlEditorDialog({ isOpen, title, value, onChange, onClose, onSa
           />
         </div>
 
-        {error && <div style={{ color: "#f55", fontSize: "0.85rem", padding: "4px 8px" }}>{error}</div>}
+        {error && (
+          <div
+            style={{
+              // No error token is readable as text on the dialog in every theme, so the border marks the error.
+              color: "var(--textColorPrimary)",
+              borderLeft: "3px solid var(--colorError)",
+              fontSize: "0.85rem",
+              padding: "4px 8px",
+            }}
+          >
+            {error}
+          </div>
+        )}
 
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
           <button
@@ -91,8 +107,9 @@ export function YamlEditorDialog({ isOpen, title, value, onChange, onClose, onSa
               padding: "6px 14px",
               cursor: "pointer",
               borderRadius: "4px",
-              border: "1px solid rgba(255,255,255,0.2)",
+              border: "1px solid var(--halfGray)",
               background: "transparent",
+              color: "var(--textColorPrimary)",
             }}
           >
             Cancel
@@ -106,9 +123,10 @@ export function YamlEditorDialog({ isOpen, title, value, onChange, onClose, onSa
               cursor: saving ? "not-allowed" : "pointer",
               borderRadius: "4px",
               border: "none",
-              background: "#0084d1",
-              color: "#fff",
-              opacity: saving ? 0.6 : 1,
+              // A disabled button keeps its fixed colors: no theme variable is readable on
+              // --buttonDisabledBackground in every theme.
+              background: saving ? "#555" : "var(--buttonPrimaryBackground)",
+              color: saving ? "#fff" : "var(--textColorOnPrimary)",
             }}
           >
             {saving ? "Saving…" : "Save"}
