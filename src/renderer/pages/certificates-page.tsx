@@ -54,35 +54,41 @@ export function CertificatesPage() {
 
   return (
     <>
-      <CertHealthSummaryObserver store={store as unknown as CertificateStore} />
-      <Renderer.Component.KubeObjectListLayout<Certificate, CertificateApi>
-        store={store}
-        isConfigurable
-        tableId="cert-manager-certificates"
-        className="CertificatesPage"
-        renderTableHeader={[
-          { title: "Name", className: "name" },
-          { title: "Namespace", className: "namespace" },
-          { title: "Ready", className: "ready" },
-          { title: "Secret", className: "secret" },
-          { title: "Validity", className: "expiry" },
-        ]}
-        renderTableContents={(cert) => {
-          const spec = certSpec(cert);
-          const status = certStatus(cert);
-          return [
-            cert.getName(),
-            cert.getNs(),
-            certIsReady(cert) ? "✓" : "✗",
-            spec.secretName ?? "-",
-            <ValidityBar key="validity" notBefore={status.notBefore} notAfter={status.notAfter} />,
-          ];
-        }}
-        addRemoveButtons={{
-          onAdd: () => setWizardOpen(true),
-          addTooltip: "Create Certificate",
-        }}
-      />
+      {/* The summary takes its height and the list the rest: the host's main area clips what overflows it, and the
+          add button of the list with it. */}
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 0 }}>
+        <CertHealthSummaryObserver store={store as unknown as CertificateStore} />
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <Renderer.Component.KubeObjectListLayout<Certificate, CertificateApi>
+            store={store}
+            isConfigurable
+            tableId="cert-manager-certificates"
+            className="CertificatesPage"
+            renderTableHeader={[
+              { title: "Name", className: "name" },
+              { title: "Namespace", className: "namespace" },
+              { title: "Ready", className: "ready" },
+              { title: "Secret", className: "secret" },
+              { title: "Validity", className: "expiry" },
+            ]}
+            renderTableContents={(cert) => {
+              const spec = certSpec(cert);
+              const status = certStatus(cert);
+              return [
+                cert.getName(),
+                cert.getNs(),
+                certIsReady(cert) ? "✓" : "✗",
+                spec.secretName ?? "-",
+                <ValidityBar key="validity" notBefore={status.notBefore} notAfter={status.notAfter} />,
+              ];
+            }}
+            addRemoveButtons={{
+              onAdd: () => setWizardOpen(true),
+              addTooltip: "Create Certificate",
+            }}
+          />
+        </div>
+      </div>
       <CertificateWizardDialog isOpen={wizardOpen} onClose={() => setWizardOpen(false)} onSubmit={handleCreate} />
       <YamlEditorDialogHost />
     </>

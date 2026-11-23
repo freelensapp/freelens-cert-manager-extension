@@ -314,6 +314,10 @@ gone from the Custom Resources tree.
 - **Links** between objects are `ResourceLink` buttons, which open the details of
   a self link with `Renderer.Navigation.showDetails`. The lists of owned objects
   read the store of the other kind and show what it has loaded.
+- **The height of a page**: the main area of the host has `overflow: hidden` and
+  the list takes its whole height, so anything above the list pushes its bottom
+  and its add button out of reach. The Certificates page lays out its summary and
+  list in a flex column, where the list takes what the summary leaves.
 - **Styles** are inline `style` props; there are no CSS modules ("CSS").
 - **Icons** are components in `src/renderer/components/icons.tsx` that return an
   inline 16x16 SVG with its own colors. They are rendered directly, and not
@@ -832,7 +836,8 @@ either process:
   and no message of the error boundary, the row's menu lists the extension's
   items, and the toolbar of the details shows them as icons alone. The details
   of the Certificate show the X.509 data of a Secret of the fixtures, on rows of
-  their own. It then clicks Force Renew, Approve and Deny, accepts their
+  their own, and the Certificates page keeps its list and add button in view
+  under the summary. It then clicks Force Renew, Approve and Deny, accepts their
   confirmation, and checks the condition each one writes to the status of the
   object. Each view is an `it` that navigates by itself, so that it does not
   depend on the state another left. They do not check every field, the Custom

@@ -198,6 +198,29 @@ describe.skipIf(!(await appReady({ cluster: true })))(
       expect(await detailsItemValue(frame, "Subject").textContent()).toBe("CN=test.example.com");
     });
 
+    it("keeps the list and its add button in view under the summary of the Certificates page", async () => {
+      await openListPage(frame, "cert-manager-certificates");
+
+      // The main area of the host clips what overflows it, so a page taller than
+      // the area hides the bottom of the list and the add button, with no way to
+      // scroll to them.
+      const main = frame.locator("main");
+      const { clientHeight, scrollHeight } = await main.evaluate((el) => ({
+        clientHeight: el.clientHeight,
+        scrollHeight: el.scrollHeight,
+      }));
+
+      expect(scrollHeight).toBeLessThanOrEqual(clientHeight);
+
+      const inView = await frame.locator(".AddRemoveButtons .add-button").evaluate((button) => {
+        const { left, top, width, height } = button.getBoundingClientRect();
+
+        return button.contains(document.elementFromPoint(left + width / 2, top + height / 2));
+      });
+
+      expect(inView).toBe(true);
+    });
+
     it("asks for a new issuance of the Certificate, after asking", async () => {
       const row = await openListPage(frame, "cert-manager-certificates");
       const menu = await openRowMenu(frame, row);
