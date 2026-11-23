@@ -875,7 +875,10 @@ export async function openListPage(frame: Frame, pageId: string, objectName = te
     .filter({ has: frame.locator(".TableCell").getByText(objectName, { exact: true }) });
 
   // A page that crashed never shows the row, so the message ends the wait too.
-  await row.or(errorBoundaryMessage(frame.locator("main"))).first().waitFor(viewTimeout);
+  await row
+    .or(errorBoundaryMessage(frame.locator("main")))
+    .first()
+    .waitFor(viewTimeout);
   await expectNoErrorPage(frame.locator("main"), "The list page");
 
   return row;

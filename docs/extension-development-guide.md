@@ -302,13 +302,11 @@ pnpm test:unit          # vitest run
 pnpm test:integration   # vitest run --config vitest.integration.config.ts
 ```
 
-### End-to-end tests (Playwright)
+### Integration tests (Playwright)
 
-Integration tests use Playwright against a real Freelens instance with minikube:
-
-```sh
-minikube start --cpus=2 --memory=6144
-```
+The integration tests drive Freelens dev over the Chrome DevTools Protocol, with
+Playwright, against a [kind](https://kind.sigs.k8s.io/) cluster. See
+[Integration tests](../README.md#integration-tests) in the README.
 
 ---
 
@@ -321,7 +319,7 @@ minikube start --cpus=2 --memory=6144
 | TypeScript | 7.x     | Language                        |
 | Vite       | 8.x     | Bundler (two-pass build)        |
 | Vitest     | 5.x     | Unit + integration tests        |
-| Playwright | 1.64+   | E2E tests                       |
+| Playwright | 1.65+   | Integration tests               |
 | Biome      | 2.6+    | Linter + formatter              |
 | React      | 19.x    | UI (host-provided)              |
 | MobX       | 7.x     | State (host-provided, ESM deco) |
