@@ -206,10 +206,10 @@ A list page calls `getStore()` while it renders, in a `try`, and renders
 `NotInstalled` when it throws. The pages are `observer`s and `getStore()` reads
 the host's observable API registry, so a page rendered before the host has
 registered the kind leaves `NotInstalled` by itself when it does ("Rules That
-Fail Silently"). When the CRD has only just been created, the API server answers
-the first list with a 429: the host shows a warning in the header of the list,
-does not retry and starts no watch, so that list stays empty until the page is
-opened again.
+Fail Silently"). When the CRD has only just been created, the API server can
+answer the first list with a 429: the host shows a warning in the header of the
+list, does not retry and starts no watch, so that list stays empty until the
+namespace selection changes or the page is opened again.
 
 `customResources` in `src/renderer/index.tsx` lists the six model classes. The
 host reads the group and plural from each class's `crd`, and while the
@@ -321,12 +321,12 @@ gone from the Custom Resources tree.
 - **The height of a page**: the main area of the host has `overflow-y: hidden` and
   the list takes its whole height, so anything above the list pushes its bottom
   and its add button out of reach. The Certificates page lays out its summary and
-  list in a flex column, where the list takes what the summary leaves. The summary
-  holds its height from the first render, also with no certificate: the menu of
-  the namespace filter is a portal that does not follow the filter, so a row that
-  appeared above the list while the menu is open would leave it on top of the
-  filter. It counts `contextItems`, what the list shows: `items` keeps the objects
-  of the namespaces selected before.
+  list in a flex column, where the list takes what the summary leaves. With nothing
+  to count, the summary keeps its row, hidden, so it holds its height as long as
+  its tiles fit on one line: the menu of the namespace filter is a portal that does
+  not follow the filter, so a row that appeared above the list while the menu is
+  open would leave it on top of the filter. It counts `contextItems`, what the list
+  shows: `items` keeps the objects of the namespaces selected before.
 - **Styles** are inline `style` props; there are no CSS modules ("CSS").
 - **Icons** are components in `src/renderer/components/icons.tsx` that return an
   inline 16x16 SVG with its own colors. They are rendered directly, and not

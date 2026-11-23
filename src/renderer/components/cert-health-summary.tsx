@@ -83,9 +83,10 @@ export function CertHealthSummary({ store }: Props) {
         gap: "8px",
         padding: "8px 0 4px",
         flexWrap: "wrap",
-        // The row holds its height from the first render: the menu of the namespace filter does not follow the filter,
-        // so a row that appeared under an open menu would leave the menu on top of the filter.
-        visibility: store.isLoaded ? "visible" : "hidden",
+        // With nothing to count, while the list loads, after a failed list or in an empty namespace, the row keeps its
+        // place, hidden: the menu of the namespace filter does not follow the filter, so a row that appeared under an
+        // open menu would leave the menu on top of the filter.
+        visibility: certs.length > 0 ? "visible" : "hidden",
       }}
     >
       <Tile value={total} label="Total" color="var(--colorTextPrimary, currentColor)" />

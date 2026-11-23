@@ -14,7 +14,7 @@ describe("CertHealthSummary", () => {
   let container: HTMLDivElement;
   let root: Root;
 
-  function renderWith(store: { items?: unknown[]; contextItems: unknown[]; isLoaded: boolean }) {
+  function renderWith(store: { items: unknown[]; contextItems: unknown[] }) {
     act(() => root.render(<CertHealthSummary store={store as unknown as CertificateStore} />));
 
     return container.firstElementChild as HTMLElement | null;
@@ -32,30 +32,38 @@ describe("CertHealthSummary", () => {
     container.remove();
   });
 
-  it("holds its place, without counts to read, until the list has loaded", () => {
-    const row = renderWith({ contextItems: [], isLoaded: false });
+  it("keeps its row, hidden and with its tiles, when it has nothing to count", () => {
+    const row = renderWith({ items: [], contextItems: [] });
 
     expect(row).not.toBeNull();
     expect(row?.style.visibility).toBe("hidden");
+    expect(row?.textContent).toContain("Total");
+    expect(row?.textContent).toContain("Ready");
   });
 
-  it("shows zero for a list that has loaded with nothing in it", () => {
-    const row = renderWith({ contextItems: [], isLoaded: true });
+  it("shows the counts of a list with a certificate", () => {
+    const row = renderWith({ items: [failingCertificate], contextItems: [failingCertificate] });
 
-    expect(row?.style.visibility).toBe("visible");
-    expect(row?.textContent).toContain("0Total");
+    expect(row?.style.visibility).not.toBe("hidden");
+    expect(row?.textContent).toContain("1Total");
     expect(row?.textContent).toContain("0Ready");
+    expect(row?.textContent).toContain("1Not Ready");
   });
 
   it("counts only the certificates of the namespaces in the filter", () => {
     const row = renderWith({
       items: [readyCertificate, failingCertificate],
       contextItems: [readyCertificate],
-      isLoaded: true,
     });
 
     expect(row?.textContent).toContain("1Total");
     expect(row?.textContent).toContain("1Ready");
     expect(row?.textContent).not.toContain("Not Ready");
+  });
+
+  it("hides the counts when the namespaces in the filter have no certificate", () => {
+    const row = renderWith({ items: [readyCertificate], contextItems: [] });
+
+    expect(row?.style.visibility).toBe("hidden");
   });
 });

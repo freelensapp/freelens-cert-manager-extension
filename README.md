@@ -206,9 +206,10 @@ Every action on an existing object, except Edit YAML, asks first:
   CertificateRequest or an Order list the objects they own once the page of
   that kind has been opened in the session.
 - **A page open while cert-manager is being installed can stay empty.** The API
-  server answers the first request for a CRD it has just created with a 429.
-  Freelens shows a warning next to the namespace filter and does not ask again,
-  so the list stays empty until you leave the page and come back.
+  server can answer the first request for a CRD it has just created with a 429.
+  Freelens shows a warning in the header of the list and does not ask again by
+  itself, so the list stays empty until you change the namespace filter or leave
+  the page and come back.
 
 ## Build from the source
 

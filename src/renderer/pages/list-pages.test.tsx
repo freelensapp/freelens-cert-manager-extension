@@ -49,7 +49,7 @@ describe.each(pages)("the list page of $kind", ({ model, Page }) => {
         throw new Error("Not registered");
       }
 
-      return { items: [], contextItems: [], isLoaded: true };
+      return { items: [], contextItems: [] };
     });
 
     act(() => root.render(<Page />));
