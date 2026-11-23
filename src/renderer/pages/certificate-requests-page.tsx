@@ -5,6 +5,7 @@
 
 import { Renderer } from "@freelensapp/extensions";
 import { load } from "js-yaml";
+import { observer } from "mobx-react";
 import { useState } from "react";
 import { CertificateRequest, type CertificateRequestApi, type CertificateRequestStore } from "../../common/api";
 import { getCertReqSpec, isCertReqApproved, isCertReqDenied, isCertReqReady } from "../../common/api/accessors";
@@ -25,7 +26,7 @@ spec:
   duration: 2160h
 `;
 
-export function CertificateRequestsPage() {
+export const CertificateRequestsPage = observer(function CertificateRequestsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [createYaml, setCreateYaml] = useState(CERT_REQUEST_TEMPLATE);
 
@@ -90,4 +91,4 @@ export function CertificateRequestsPage() {
       <YamlEditorDialogHost />
     </>
   );
-}
+});

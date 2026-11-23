@@ -678,8 +678,13 @@ export async function openPage(frame: Frame, pageId: string) {
  * the app keeps it, so it is made only when the filter shows another one. The
  * session opens no page of the host, whose requests can log errors of their
  * own: the Pods page asks for pod metrics, and kind has no metrics server.
+ *
+ * It waits for the sidebar entry of the extension first: the host enables the
+ * routes of an extension together with its entries, and a navigation that comes
+ * before them ends on the Overview.
  */
 async function selectTestNamespace(frame: Frame) {
+  await frame.waitForSelector(`[data-testid="sidebar-item-${sanitizedExtensionId}-cert-manager"]`, viewTimeout);
   await openPage(frame, namespacePageId);
 
   const label = frame.locator(".NamespaceSelect").getByText(`Namespace: ${testNamespace}`, { exact: true });
