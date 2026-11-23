@@ -318,7 +318,11 @@ gone from the Custom Resources tree.
 - **The height of a page**: the main area of the host has `overflow-y: hidden` and
   the list takes its whole height, so anything above the list pushes its bottom
   and its add button out of reach. The Certificates page lays out its summary and
-  list in a flex column, where the list takes what the summary leaves.
+  list in a flex column, where the list takes what the summary leaves. The summary
+  holds its height from the first render, also with no certificate: the menu of
+  the namespace filter is a portal that does not follow the filter, so a row that
+  appeared above the list while the menu is open would leave it on top of the
+  filter.
 - **Styles** are inline `style` props; there are no CSS modules ("CSS").
 - **Icons** are components in `src/renderer/components/icons.tsx` that return an
   inline 16x16 SVG with its own colors. They are rendered directly, and not

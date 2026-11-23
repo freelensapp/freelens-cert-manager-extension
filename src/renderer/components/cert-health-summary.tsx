@@ -72,8 +72,6 @@ interface Props {
 
 export function CertHealthSummary({ store }: Props) {
   const certs = store.items as Certificate[];
-  if (certs.length === 0) return null;
-
   const { total, ready, expiringSoon, expired } = computeCounts(certs);
   const notReady = total - ready;
 
@@ -84,6 +82,9 @@ export function CertHealthSummary({ store }: Props) {
         gap: "8px",
         padding: "8px 0 4px",
         flexWrap: "wrap",
+        // The row holds its height from the first render: the menu of the namespace filter does not follow the filter,
+        // so a row that appeared under an open menu would leave the menu on top of the filter.
+        visibility: store.isLoaded ? "visible" : "hidden",
       }}
     >
       <Tile value={total} label="Total" color="var(--colorTextPrimary, currentColor)" />
