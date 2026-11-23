@@ -71,7 +71,8 @@ interface Props {
 }
 
 export function CertHealthSummary({ store }: Props) {
-  const certs = store.items as Certificate[];
+  // `items` keeps the objects of the namespaces selected before; the list shows `contextItems`.
+  const certs = store.contextItems as Certificate[];
   const { total, ready, expiringSoon, expired } = computeCounts(certs);
   const notReady = total - ready;
 
