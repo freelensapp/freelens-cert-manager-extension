@@ -52,8 +52,18 @@ function KubeObjectListLayout({ store, renderTableContents }: KubeObjectListLayo
   );
 }
 
+interface DialogProps {
+  isOpen: boolean;
+  children?: React.ReactNode;
+}
+
+function Dialog({ isOpen, children }: DialogProps) {
+  return isOpen ? React.createElement("div", null, children) : null;
+}
+
 export const Renderer = {
   Component: {
+    Dialog,
     KubeObjectListLayout,
   },
   K8sApi: {

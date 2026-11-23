@@ -203,10 +203,10 @@ of `crd.apiVersions` that the cluster serves, and throws when none is. No
 too, and the host refuses to build one outside a cluster frame.
 
 A list page calls `getStore()` while it renders, in a `try`, and renders
-`NotInstalled` when it throws. The pages are not `observer`s yet, and
-`getStore()` reads the host's observable API registry, so a page open before
-the cluster serves the kind stays on `NotInstalled` until the user navigates
-away and back ("Rules That Fail Silently").
+`NotInstalled` when it throws. The pages are `observer`s and `getStore()` reads
+the host's observable API registry, so a page rendered before the host has
+registered the kind leaves `NotInstalled` by itself when it does ("Rules That
+Fail Silently").
 
 `customResources` in `src/renderer/index.tsx` lists the six model classes. The
 host reads the group and plural from each class's `crd`, and while the
@@ -233,10 +233,11 @@ tests apply the CRDs of cert-manager v1.21.3 by default
    readonly` metadata, the `declare kind` and `declare apiVersion` literals and
    the `KubeApi` and `KubeObjectStore` subclasses, exported by `index.ts`.
 2. **The accessors** in `src/common/api/accessors.ts`, for what the views read.
-3. **The list page** in `src/renderer/pages/`, which renders `NotInstalled` when
-   `getStore()` throws and `YamlEditorDialogHost` next to its list, registered
-   in `clusterPages` and in `clusterPageMenus`, under the Cert Manager group
-   (`parentId: "cert-manager"`).
+3. **The list page** in `src/renderer/pages/`, an `observer` that renders
+   `NotInstalled` when `getStore()` throws and `YamlEditorDialogHost` next to
+   its list, registered in `clusterPages` and in `clusterPageMenus`, under the
+   Cert Manager group (`parentId: "cert-manager"`), with its entry in
+   `list-pages.test.tsx`.
 4. **The details panel** in `src/renderer/details/`, registered in
    `kubeObjectDetailItems` with `Renderer.K8sApi.detailsFor`, inside an
    `ErrorBoundary`, with only what the host does not show already.
@@ -261,9 +262,9 @@ gone from the Custom Resources tree.
 
 ## Renderer Components
 
-- The pages, panels and menu items are function components. `CertHealthSummary`,
-  the preference input and `YamlEditorDialogHost` are `observer`s from
-  `mobx-react`, which the build maps to the host's copy.
+- The pages, panels and menu items are function components. The pages,
+  `CertHealthSummary`, the preference input and `YamlEditorDialogHost` are
+  `observer`s from `mobx-react`, which the build maps to the host's copy.
 - Every page and details panel renders inside an `ErrorBoundary` from
   `src/renderer/components/error-boundary.tsx`, a class component of the host's
   React, written inline where the registration is made, with the `name` of the
@@ -372,8 +373,7 @@ mechanism; this is the list to check a change against.
   `observer`.** The host registers a CRD's APIs after the cluster frame has
   loaded the CRDs, and `getStore()` reads its observable registry. A component
   that is not an `observer` and rendered before then shows the kind as not
-  installed until the user navigates away and back. The list pages here still
-  do that; a new page is an `observer` ("CRD KubeObject Pattern").
+  installed until the user navigates away and back ("CRD KubeObject Pattern").
 - **`this.props` of an `@observer` class component only in its `render()`.**
   Under mobx-react 10 they are not observable. A `@computed` getter that reads
   them, or a method the host calls from its own derivations (`getItems` and

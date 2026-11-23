@@ -205,9 +205,6 @@ Every action on an existing object, except Edit YAML, asks first:
 - **Related objects come from what is loaded.** The details of a Certificate, a
   CertificateRequest or an Order list the objects they own once the page of
   that kind has been opened in the session.
-- **A page opened before the CRDs keeps its notice.** A list page that was open
-  while cert-manager was being installed says that it is not installed until
-  you leave the page and come back.
 
 ## Build from the source
 
