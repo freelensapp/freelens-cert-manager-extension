@@ -39,7 +39,7 @@ export function ResourceEditYamlMenuItem({ object, api, toolbar }: Props) {
 
   return (
     <Renderer.Component.MenuItem onClick={open}>
-      <Renderer.Component.Icon material="edit" interactive={toolbar} title="Edit YAML" />
+      <Renderer.Component.Icon material="code" interactive={toolbar} title="Edit YAML" />
       <span className="title">Edit YAML</span>
     </Renderer.Component.MenuItem>
   );
