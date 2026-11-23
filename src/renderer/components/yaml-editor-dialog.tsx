@@ -123,11 +123,10 @@ export function YamlEditorDialog({ isOpen, title, value, onChange, onClose, onSa
               cursor: saving ? "not-allowed" : "pointer",
               borderRadius: "4px",
               border: "none",
-              // --textColorOnPrimary is not in v2.0.0: --sidebarActiveColor is the host's text on --primary in both
-              // releases, and follows a custom accent. A disabled button keeps its fixed colors, because no theme
-              // variable is readable on --buttonDisabledBackground in every theme.
+              // A disabled button keeps its fixed colors: no theme variable is readable on
+              // --buttonDisabledBackground in every theme.
               background: saving ? "#555" : "var(--buttonPrimaryBackground)",
-              color: saving ? "#fff" : "var(--sidebarActiveColor)",
+              color: saving ? "#fff" : "var(--textColorOnPrimary)",
             }}
           >
             {saving ? "Saving…" : "Save"}

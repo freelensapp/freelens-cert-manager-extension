@@ -33,7 +33,7 @@ delete what is stuck, and edit an object as YAML.
 
 ## Requirements
 
-- Freelens 2.0.0 or a later 2.x (extension API v2).
+- Freelens 2.1.0 or a later 2.x (extension API v2).
 - cert-manager 1.x, which serves `cert-manager.io/v1` and
   `acme.cert-manager.io/v1`. The extension is tested with cert-manager 1.21.
 

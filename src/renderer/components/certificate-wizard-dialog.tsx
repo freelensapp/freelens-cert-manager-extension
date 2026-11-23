@@ -62,7 +62,7 @@ function buildYaml(f: Fields): string {
 }
 
 // --- Shared input style ---
-// Text in the form takes --textColorPrimary, readable on the dialog in every theme of both supported releases:
+// Text in the form takes --textColorPrimary, readable on the dialog in every theme:
 // --dialogTextColor is too faint on the default light theme, and the host's <label> color has an alpha in some themes.
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -364,11 +364,10 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
                 cursor: isValid ? "pointer" : "not-allowed",
                 borderRadius: "4px",
                 border: "none",
-                // --textColorOnPrimary is not in v2.0.0: --sidebarActiveColor is the host's text on --primary in
-                // both releases, and follows a custom accent. A disabled button keeps its fixed colors, because no
-                // theme variable is readable on --buttonDisabledBackground in every theme.
+                // A disabled button keeps its fixed colors: no theme variable is readable on
+                // --buttonDisabledBackground in every theme.
                 background: isValid ? "var(--buttonPrimaryBackground)" : "#555",
-                color: isValid ? "var(--sidebarActiveColor)" : "#fff",
+                color: isValid ? "var(--textColorOnPrimary)" : "#fff",
               }}
             >
               Review YAML →
@@ -385,7 +384,7 @@ export function CertificateWizardDialog({ isOpen, onClose, onSubmit, defaultName
                 borderRadius: "4px",
                 border: "none",
                 background: saving ? "#555" : "var(--buttonPrimaryBackground)",
-                color: saving ? "#fff" : "var(--sidebarActiveColor)",
+                color: saving ? "#fff" : "var(--textColorOnPrimary)",
               }}
             >
               {saving ? "Creating…" : "Create Certificate"}

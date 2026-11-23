@@ -16,7 +16,7 @@ new issuance, approve or deny a CertificateRequest, delete a Certificate with
 its Secret, delete a stuck Order or Challenge, and edit an object as YAML.
 
 - **Language**: TypeScript 7.x
-- **Runtime**: Freelens >= 2.0.0 (extension API v2, `engines.freelens: ^2.0.0`).
+- **Runtime**: Freelens >= 2.1.0 (extension API v2, `engines.freelens: ^2.1.0`).
   The host provides React 19, mobx 7, mobx-react 10 and Monaco at runtime.
 - **Toolchain**: Node.js 24.x, yq 4.x and cosign 3.x (`mise.toml` with
   `mise.lock`; Node also in `.nvmrc`)
@@ -808,7 +808,7 @@ opens (see "Checking the Extension in Freelens Dev"), so they need no package of
 Freelens and no file of its checkout; Freelens dev is the only dependency, and
 it is not in `package.json`. `playwright` is a devDependency at the version of
 Freelens's catalog. The workflow builds the extension, checks out Freelens at
-each release tag of its matrix (`v2.0.0`, `v2.1.0`), starts `pnpm dev` there in
+each release tag of its matrix (`v2.1.0`), starts `pnpm dev` there in
 the background under `xvfb-run`, with its output in a file and a fresh profile
 in `FREELENS_INTEGRATION_TESTING_DIR`, waits until the CDP endpoint answers, and
 runs `pnpm test:integration` here. The job `integration tests` waits for every
